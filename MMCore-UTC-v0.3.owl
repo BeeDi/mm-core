@@ -17,7 +17,7 @@
   xml:base="http://www.mediamapproject.org/ConceptualModels/Core">
   <owl:Ontology rdf:about="">
     <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >V0.36</owl:versionInfo>
+    >V0.37</owl:versionInfo>
     <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Added    :: Note + multi-jargon relations.
 Modified :: Term relations to Entity.
@@ -25,13 +25,9 @@ Added    :: Fictional+Historical Agent for consistency.
 Updated :: Definitions for Events (concepts and relations, including restrictions).
 Updated :: Definitions for Role + Position (concept and relations)
 Updated :: Definitions for Skills (concepts and relations)
-Updated :: Definitions for CommissionOrder + Right (concepts and relations)</rdfs:comment>
+Updated :: Definitions for CommissionOrder + Right (concepts and relations)
+Updated :: Definitions for DigitalResource (concepts and relations)</rdfs:comment>
   </owl:Ontology>
-  <owl:Class>
-    <owl:complementOf>
-      <owl:Class rdf:ID="HistoricalEvent"/>
-    </owl:complementOf>
-  </owl:Class>
   <owl:Class rdf:ID="ElementPosition">
     <owl:disjointWith>
       <owl:Class rdf:ID="FilmedSpace"/>
@@ -70,6 +66,16 @@ Updated :: Definitions for CommissionOrder + Right (concepts and relations)</rdf
       <owl:Class rdf:ID="Framing"/>
     </owl:disjointWith>
   </owl:Class>
+  <owl:Class>
+    <owl:unionOf rdf:parseType="Collection">
+      <owl:Class rdf:ID="FilmedElement"/>
+      <owl:Class rdf:ID="Program"/>
+      <owl:Class rdf:ID="Shot"/>
+      <owl:Class rdf:ID="Subject"/>
+      <owl:Class rdf:ID="Subshot"/>
+      <owl:Class rdf:ID="Scene"/>
+    </owl:unionOf>
+  </owl:Class>
   <owl:Class rdf:ID="AspectRatioTypes">
     <owl:disjointWith>
       <owl:Class rdf:ID="SubjectivityTypes"/>
@@ -105,7 +111,7 @@ Updated :: Definitions for CommissionOrder + Right (concepts and relations)</rdf
       <owl:Class rdf:ID="AuthorityList"/>
     </rdfs:subClassOf>
     <owl:disjointWith>
-      <owl:Class rdf:ID="ElementOrientations"/>
+      <owl:Class rdf:ID="ShotProportions"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:ID="CameraMovements"/>
@@ -114,7 +120,7 @@ Updated :: Definitions for CommissionOrder + Right (concepts and relations)</rdf
       <owl:Class rdf:ID="SoundTypes"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:ID="ShotProportions"/>
+      <owl:Class rdf:ID="ElementOrientations"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:ID="SoundSpatialDimensions"/>
@@ -123,12 +129,15 @@ Updated :: Definitions for CommissionOrder + Right (concepts and relations)</rdf
       <owl:Class rdf:ID="ElementMovements"/>
     </owl:disjointWith>
   </owl:Class>
-  <owl:Class rdf:ID="Program">
+  <owl:Class rdf:about="#Program">
     <owl:disjointWith>
       <owl:Class rdf:ID="EditorialObject"/>
     </owl:disjointWith>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Program is an audiovisual MediaAsset which may be the final result of a TV production project.</rdfs:isDefinedBy>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="MediaAsset"/>
+    </rdfs:subClassOf>
     <rdfs:subClassOf>
       <owl:Restriction>
         <owl:onProperty>
@@ -140,7 +149,14 @@ Updated :: Definitions for CommissionOrder + Right (concepts and relations)</rdf
       </owl:Restriction>
     </rdfs:subClassOf>
     <rdfs:subClassOf>
-      <owl:Class rdf:ID="MediaAsset"/>
+      <owl:Restriction>
+        <owl:allValuesFrom>
+          <owl:Class rdf:ID="TemporalObject"/>
+        </owl:allValuesFrom>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:ID="hasRealisation"/>
+        </owl:onProperty>
+      </owl:Restriction>
     </rdfs:subClassOf>
   </owl:Class>
   <owl:Class rdf:ID="AudiovisualMedia">
@@ -153,22 +169,12 @@ Updated :: Definitions for CommissionOrder + Right (concepts and relations)</rdf
       <owl:Class rdf:about="#MediaAsset"/>
     </rdfs:subClassOf>
   </owl:Class>
-  <owl:Class>
-    <owl:intersectionOf rdf:parseType="Collection">
-      <owl:Class rdf:ID="Event"/>
-      <owl:Class>
-        <owl:complementOf>
-          <owl:Class rdf:about="#HistoricalEvent"/>
-        </owl:complementOf>
-      </owl:Class>
-    </owl:intersectionOf>
-  </owl:Class>
   <owl:Class rdf:ID="ConceptualModel">
     <owl:disjointWith>
       <owl:Class rdf:ID="Profile"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:ID="TemporalObject"/>
+      <owl:Class rdf:about="#TemporalObject"/>
     </owl:disjointWith>
     <rdfs:subClassOf>
       <owl:Class rdf:ID="Entity"/>
@@ -189,10 +195,10 @@ Updated :: Definitions for CommissionOrder + Right (concepts and relations)</rdf
       <owl:Class rdf:ID="Population"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:ID="Location"/>
+      <owl:Class rdf:ID="Agent"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:ID="Agent"/>
+      <owl:Class rdf:ID="Location"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:ID="ContentObject"/>
@@ -207,31 +213,31 @@ Updated :: Definitions for CommissionOrder + Right (concepts and relations)</rdf
     >ConceptualModel is a model which defines concepts, relations and attributes to represent a conceptual view on real-life events, objects or human being. A Conceptual Model may be built on top of another one. 
 For instance, we may define the concept of ProductionUnit as a specialisation of the CorporateBody concept. Hence, the model defining ProductionUnit is built as a refinement of the model defining the CorporateBody concept.</rdfs:isDefinedBy>
     <owl:disjointWith>
-      <owl:Class rdf:ID="MissionSettlement"/>
-    </owl:disjointWith>
-    <owl:disjointWith>
       <owl:Class rdf:ID="Notation"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:ID="SoftwareContributor"/>
+      <owl:Class rdf:ID="MissionSettlement"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:ID="Skill"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:ID="USE"/>
+      <owl:Class rdf:ID="SoftwareContributor"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:ID="Identifier"/>
     </owl:disjointWith>
     <owl:disjointWith>
+      <owl:Class rdf:ID="USE"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
       <owl:Class rdf:ID="CommissionOrder"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Event"/>
+      <owl:Class rdf:ID="IntellectualProperty"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:ID="IntellectualProperty"/>
+      <owl:Class rdf:ID="Event"/>
     </owl:disjointWith>
   </owl:Class>
   <owl:Class rdf:ID="Track">
@@ -306,10 +312,10 @@ For instance, the second track of a mkv file which refers to the subtitles of a 
       <owl:Class rdf:about="#Position"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Profile"/>
+      <owl:Class rdf:about="#Event"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Event"/>
+      <owl:Class rdf:about="#Profile"/>
     </owl:disjointWith>
   </owl:Class>
   <owl:Class rdf:about="#USE">
@@ -333,20 +339,20 @@ For instance, the second track of a mkv file which refers to the subtitles of a 
       <owl:Class rdf:about="#ContentObject"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#CommissionOrder"/>
+      <owl:Class rdf:about="#Right"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Right"/>
+      <owl:Class rdf:about="#CommissionOrder"/>
     </owl:disjointWith>
     <owl:disjointWith rdf:resource="#View"/>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Notation"/>
+      <owl:Class rdf:about="#SoftwareContributor"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:about="#MissionSettlement"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#SoftwareContributor"/>
+      <owl:Class rdf:about="#Notation"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:about="#Role"/>
@@ -367,10 +373,10 @@ For instance, the second track of a mkv file which refers to the subtitles of a 
       <owl:Class rdf:about="#Identifier"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#IntellectualProperty"/>
+      <owl:Class rdf:about="#Annotation"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Annotation"/>
+      <owl:Class rdf:about="#IntellectualProperty"/>
     </owl:disjointWith>
     <rdfs:subClassOf>
       <owl:Class rdf:about="#Entity"/>
@@ -383,13 +389,13 @@ For instance, the second track of a mkv file which refers to the subtitles of a 
       <owl:Class rdf:about="#Notation"/>
     </rdfs:subClassOf>
     <owl:disjointWith>
-      <owl:Class rdf:about="#AuthorityList"/>
+      <owl:Class rdf:ID="VocabularyEncodingScheme"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:ID="SyntaxEncodingScheme"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:ID="VocabularyEncodingScheme"/>
+      <owl:Class rdf:about="#AuthorityList"/>
     </owl:disjointWith>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >NaturalLanguage is a set of Term pertaining to a natural language or Resource expressed in natural languages such as French, English, Flemish etc. Country code may be added to represent geographical variations of a language. For instance, English &amp; UK or English &amp; USA.</rdfs:isDefinedBy>
@@ -434,23 +440,23 @@ For instance, the second track of a mkv file which refers to the subtitles of a 
       <owl:Class rdf:about="#MissionSettlement"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Profile"/>
+      <owl:Class rdf:about="#Agent"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:about="#CommissionOrder"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Agent"/>
+      <owl:Class rdf:about="#Profile"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:about="#ContentObject"/>
     </owl:disjointWith>
     <owl:disjointWith rdf:resource="#ConceptualModel"/>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Population"/>
+      <owl:Class rdf:about="#Annotation"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Annotation"/>
+      <owl:Class rdf:about="#Population"/>
     </owl:disjointWith>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Skill is a contributor's ability to perform actions as well as the ability to understand prescriptive indications to perform these actions.
@@ -503,10 +509,10 @@ For instance, Outdoor Shooting is a Skill that implies that the Agent is able to
       <owl:Class rdf:about="#WithinFramePositions"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#ElementOrientations"/>
+      <owl:Class rdf:about="#SoundTypes"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#SoundTypes"/>
+      <owl:Class rdf:about="#ElementOrientations"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:about="#ShotProportions"/>
@@ -529,11 +535,11 @@ For instance, Outdoor Shooting is a Skill that implies that the Agent is able to
       <owl:Class rdf:about="#Notation"/>
     </rdfs:subClassOf>
     <owl:disjointWith>
-      <owl:Class rdf:about="#AuthorityList"/>
+      <owl:Class rdf:about="#VocabularyEncodingScheme"/>
     </owl:disjointWith>
     <owl:disjointWith rdf:resource="#NaturalLanguage"/>
     <owl:disjointWith>
-      <owl:Class rdf:about="#VocabularyEncodingScheme"/>
+      <owl:Class rdf:about="#AuthorityList"/>
     </owl:disjointWith>
   </owl:Class>
   <owl:Class rdf:about="#Device">
@@ -565,13 +571,13 @@ For instance, Outdoor Shooting is a Skill that implies that the Agent is able to
     <owl:disjointWith>
       <owl:Class rdf:about="#Right"/>
     </owl:disjointWith>
-    <owl:disjointWith>
-      <owl:Class rdf:about="#Opus"/>
-    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Skill"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#MissionSettlement"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#Skill"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Opus"/>
+    </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:about="#CommissionOrder"/>
     </owl:disjointWith>
@@ -579,10 +585,10 @@ For instance, Outdoor Shooting is a Skill that implies that the Agent is able to
       <owl:Class rdf:about="#Event"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Notation"/>
+      <owl:Class rdf:about="#Agent"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Agent"/>
+      <owl:Class rdf:about="#Notation"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:ID="HumanContributor"/>
@@ -591,7 +597,7 @@ For instance, Outdoor Shooting is a Skill that implies that the Agent is able to
       <owl:Class rdf:about="#IntellectualProperty"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:ID="CorporateContributor"/>
+      <owl:Class rdf:about="#Population"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:about="#Profile"/>
@@ -600,29 +606,24 @@ For instance, Outdoor Shooting is a Skill that implies that the Agent is able to
       <owl:Class rdf:about="#ContentObject"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Population"/>
+      <owl:Class rdf:ID="CorporateContributor"/>
     </owl:disjointWith>
-  </owl:Class>
-  <owl:Class>
-    <owl:intersectionOf rdf:parseType="Collection">
-      <owl:Class rdf:about="#Event"/>
-      <owl:Class>
-        <owl:complementOf>
-          <owl:Class rdf:about="#HistoricalEvent"/>
-        </owl:complementOf>
-      </owl:Class>
-    </owl:intersectionOf>
   </owl:Class>
   <owl:Class rdf:ID="VideoTrack">
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >VideoTrack is a temporal video content material.</rdfs:isDefinedBy>
     <rdfs:subClassOf rdf:resource="#Track"/>
     <owl:disjointWith>
-      <owl:Class rdf:ID="AudioTrack"/>
-    </owl:disjointWith>
-    <owl:disjointWith>
       <owl:Class rdf:ID="SubtitleTrack"/>
     </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:ID="AudioTrack"/>
+    </owl:disjointWith>
+  </owl:Class>
+  <owl:Class>
+    <owl:complementOf>
+      <owl:Class rdf:ID="HistoricalEvent"/>
+    </owl:complementOf>
   </owl:Class>
   <owl:Class rdf:ID="TextualObject">
     <rdfs:subClassOf>
@@ -660,10 +661,10 @@ For instance, Outdoor Shooting is a Skill that implies that the Agent is able to
     <owl:disjointWith>
       <owl:Class rdf:about="#LightningTypes"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#ElementMovements"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#WithinFramePositions"/>
     </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#ElementMovements"/>
     <rdfs:subClassOf>
       <owl:Class rdf:about="#AuthorityList"/>
     </rdfs:subClassOf>
@@ -684,54 +685,6 @@ For instance, Outdoor Shooting is a Skill that implies that the Agent is able to
         <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
         >1</owl:cardinality>
         <owl:onProperty>
-          <owl:DatatypeProperty rdf:ID="ClassOfEntity"/>
-        </owl:onProperty>
-      </owl:Restriction>
-    </rdfs:subClassOf>
-    <rdfs:subClassOf>
-      <owl:Restriction>
-        <owl:onProperty>
-          <owl:DatatypeProperty rdf:ID="versionNumber"/>
-        </owl:onProperty>
-        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
-        >1</owl:cardinality>
-      </owl:Restriction>
-    </rdfs:subClassOf>
-    <rdfs:subClassOf>
-      <owl:Restriction>
-        <owl:onProperty>
-          <owl:DatatypeProperty rdf:ID="CreationRepository"/>
-        </owl:onProperty>
-        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
-        >1</owl:cardinality>
-      </owl:Restriction>
-    </rdfs:subClassOf>
-    <mm:TextualRepresentation rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >{Description}</mm:TextualRepresentation>
-    <rdfs:subClassOf>
-      <owl:Restriction>
-        <owl:onProperty>
-          <owl:DatatypeProperty rdf:ID="LastModifiedDate"/>
-        </owl:onProperty>
-        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
-        >1</owl:cardinality>
-      </owl:Restriction>
-    </rdfs:subClassOf>
-    <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
-    <rdfs:subClassOf>
-      <owl:Restriction>
-        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
-        >1</owl:cardinality>
-        <owl:onProperty>
-          <owl:DatatypeProperty rdf:ID="Created"/>
-        </owl:onProperty>
-      </owl:Restriction>
-    </rdfs:subClassOf>
-    <rdfs:subClassOf>
-      <owl:Restriction>
-        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
-        >1</owl:cardinality>
-        <owl:onProperty>
           <owl:DatatypeProperty rdf:ID="Description"/>
         </owl:onProperty>
       </owl:Restriction>
@@ -745,16 +698,64 @@ For instance, Outdoor Shooting is a Skill that implies that the Agent is able to
         </owl:onProperty>
       </owl:Restriction>
     </rdfs:subClassOf>
-  </owl:Class>
-  <owl:Class rdf:ID="Subject">
-    <owl:disjointWith>
-      <owl:Class rdf:ID="Shot"/>
-    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+        >1</owl:cardinality>
+        <owl:onProperty>
+          <owl:DatatypeProperty rdf:ID="LastModifiedDate"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
     <rdfs:subClassOf>
       <owl:Restriction>
         <owl:onProperty>
-          <owl:ObjectProperty rdf:about="#composedOf"/>
+          <owl:DatatypeProperty rdf:ID="versionNumber"/>
         </owl:onProperty>
+        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+        >1</owl:cardinality>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <mm:TextualRepresentation rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >{Description}</mm:TextualRepresentation>
+    <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:DatatypeProperty rdf:ID="ClassOfEntity"/>
+        </owl:onProperty>
+        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+        >1</owl:cardinality>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:DatatypeProperty rdf:ID="Created"/>
+        </owl:onProperty>
+        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+        >1</owl:cardinality>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+        >1</owl:cardinality>
+        <owl:onProperty>
+          <owl:DatatypeProperty rdf:ID="CreationRepository"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:Class rdf:about="#Subject">
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Shot"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#EditorialObject"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
         <owl:allValuesFrom>
           <owl:Class>
             <owl:unionOf rdf:parseType="Collection">
@@ -764,10 +765,20 @@ For instance, Outdoor Shooting is a Skill that implies that the Agent is able to
             </owl:unionOf>
           </owl:Class>
         </owl:allValuesFrom>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#composedOf"/>
+        </owl:onProperty>
       </owl:Restriction>
     </rdfs:subClassOf>
     <rdfs:subClassOf>
-      <owl:Class rdf:about="#EditorialObject"/>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#hasRealisation"/>
+        </owl:onProperty>
+        <owl:allValuesFrom>
+          <owl:Class rdf:about="#TemporalObject"/>
+        </owl:allValuesFrom>
+      </owl:Restriction>
     </rdfs:subClassOf>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Subject is a part of a program, which has an editorial consistency and is autonomous. For instance, a news program is composed of subjects.</rdfs:isDefinedBy>
@@ -869,10 +880,10 @@ For instance, Outdoor Shooting is a Skill that implies that the Agent is able to
       <owl:Class rdf:about="#CameraParameters"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Sound"/>
+      <owl:Class rdf:about="#ShotAnnotation"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#ShotAnnotation"/>
+      <owl:Class rdf:about="#Sound"/>
     </owl:disjointWith>
   </owl:Class>
   <owl:Class rdf:about="#Lightning">
@@ -941,22 +952,22 @@ For instance, Outdoor Shooting is a Skill that implies that the Agent is able to
       <owl:Class rdf:about="#LightningTypes"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#ShotProportions"/>
+      <owl:Class rdf:about="#ElementPostures"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:about="#WithinFramePositions"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#ElementPostures"/>
+      <owl:Class rdf:about="#ShotProportions"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:about="#Cuts"/>
     </owl:disjointWith>
     <owl:disjointWith rdf:resource="#CameraMovements"/>
+    <owl:disjointWith rdf:resource="#AspectRatioTypes"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#SoundCharacterisations"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#AspectRatioTypes"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#CameraAxes"/>
     </owl:disjointWith>
@@ -964,9 +975,19 @@ For instance, Outdoor Shooting is a Skill that implies that the Agent is able to
       <owl:Class rdf:about="#ElementOrientations"/>
     </owl:disjointWith>
   </owl:Class>
-  <owl:Class rdf:ID="Scene">
+  <owl:Class rdf:about="#Scene">
     <rdfs:subClassOf>
       <owl:Class rdf:about="#EditorialObject"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#hasRealisation"/>
+        </owl:onProperty>
+        <owl:allValuesFrom>
+          <owl:Class rdf:about="#TemporalObject"/>
+        </owl:allValuesFrom>
+      </owl:Restriction>
     </rdfs:subClassOf>
   </owl:Class>
   <owl:Class rdf:about="#MissionSettlement">
@@ -1009,16 +1030,16 @@ For instance, Outdoor Shooting is a Skill that implies that the Agent is able to
       <owl:Class rdf:about="#Agent"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Profile"/>
-    </owl:disjointWith>
-    <owl:disjointWith>
       <owl:Class rdf:about="#Notation"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#IntellectualProperty"/>
+      <owl:Class rdf:about="#Profile"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:about="#Identifier"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#IntellectualProperty"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:about="#ContentObject"/>
@@ -1031,16 +1052,16 @@ For instance, Anne offered Boris to hold the Position of Director in a productio
   <owl:Class rdf:ID="Note">
     <rdfs:subClassOf rdf:resource="#MediaMapObject"/>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Entity"/>
-    </owl:disjointWith>
-    <owl:disjointWith>
-      <owl:Class rdf:about="#DigitalResource"/>
+      <owl:Class rdf:ID="Term"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:about="#PhysicalResource"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:ID="Term"/>
+      <owl:Class rdf:about="#DigitalResource"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Entity"/>
     </owl:disjointWith>
   </owl:Class>
   <owl:Class rdf:about="#SubjectivityTypes">
@@ -1091,6 +1112,7 @@ For instance, Anne offered Boris to hold the Position of Director in a productio
   <owl:Class rdf:about="#Entity">
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >An Entity is a conceptual object. As a concept, the Entity has no existence but refers instead to one or more DigitalResource (hasManifestation relation). Usually, it points to its ontological definition which includes attributes values, relations to other concepts or resources. Some attribute's value may refer to a Term (hasForName and other relations) when variations are needed. For instance, the shot value "american shot" may be translated into "plan américain" for French users.</rdfs:isDefinedBy>
+    <rdfs:subClassOf rdf:resource="#MediaMapObject"/>
     <rdfs:subClassOf>
       <owl:Restriction>
         <owl:onProperty>
@@ -1100,24 +1122,23 @@ For instance, Anne offered Boris to hold the Position of Director in a productio
         >1</owl:cardinality>
       </owl:Restriction>
     </rdfs:subClassOf>
-    <rdfs:subClassOf rdf:resource="#MediaMapObject"/>
+    <owl:disjointWith rdf:resource="#Note"/>
     <owl:disjointWith>
-      <owl:Class rdf:about="#DigitalResource"/>
+      <owl:Class rdf:about="#PhysicalResource"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:about="#Term"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#PhysicalResource"/>
+      <owl:Class rdf:about="#DigitalResource"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#Note"/>
   </owl:Class>
   <owl:Class rdf:about="#AudioTrack">
     <rdfs:subClassOf rdf:resource="#Track"/>
-    <owl:disjointWith rdf:resource="#VideoTrack"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#SubtitleTrack"/>
     </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#VideoTrack"/>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >AudioTrack is a temporal audio content material.</rdfs:isDefinedBy>
   </owl:Class>
@@ -1162,16 +1183,24 @@ For instance, Anne offered Boris to hold the Position of Director in a productio
   </owl:Class>
   <owl:Class rdf:ID="Task">
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >Une Task est une Mission opérationnelle qui vise généralement à fabriquer ou manipuler un objet audiovisuel ou des connaissances associées. 
-Par exemple, le tournage d'une interview ou bien la transformation du scénario en script de tournage.</rdfs:isDefinedBy>
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Task is a consistent set of actions in an editorial production process. A Task is an operational Mission which can not be furtherly delegated but may be performed by several contributors. A Task implies to create or manipulate information or content. 
 For instance, shooting an interview with a camera or write a Script.</rdfs:isDefinedBy>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Une Task est une Mission opérationnelle qui vise généralement à fabriquer ou manipuler un objet audiovisuel ou des connaissances associées. 
+Par exemple, le tournage d'une interview ou bien la transformation du scénario en script de tournage.</rdfs:isDefinedBy>
+    <rdfs:subClassOf>
+      <owl:Class rdf:ID="Mission"/>
+    </rdfs:subClassOf>
     <rdfs:subClassOf>
       <owl:Restriction>
         <owl:onProperty>
-          <owl:TransitiveProperty rdf:ID="isPartOfTransitive"/>
+          <owl:ObjectProperty rdf:ID="hasPartTransitive"/>
         </owl:onProperty>
+        <owl:allValuesFrom rdf:resource="#Task"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
         <owl:allValuesFrom>
           <owl:Class>
             <owl:unionOf rdf:parseType="Collection">
@@ -1181,26 +1210,16 @@ For instance, shooting an interview with a camera or write a Script.</rdfs:isDef
             </owl:unionOf>
           </owl:Class>
         </owl:allValuesFrom>
-      </owl:Restriction>
-    </rdfs:subClassOf>
-    <rdfs:subClassOf>
-      <owl:Restriction>
         <owl:onProperty>
-          <owl:TransitiveProperty rdf:ID="hasPartTransitive"/>
+          <owl:ObjectProperty rdf:ID="isPartOfTransitive"/>
         </owl:onProperty>
-        <owl:allValuesFrom>
-          <owl:Class rdf:about="#Task"/>
-        </owl:allValuesFrom>
       </owl:Restriction>
     </rdfs:subClassOf>
-    <rdfs:subClassOf>
-      <owl:Class rdf:ID="Mission"/>
-    </rdfs:subClassOf>
-    <owl:disjointWith>
-      <owl:Class rdf:about="#Activity"/>
-    </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:about="#Project"/>
+    </owl:disjointWith>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Activity"/>
     </owl:disjointWith>
   </owl:Class>
   <owl:Class rdf:about="#Framing">
@@ -1278,11 +1297,6 @@ For instance, an avi file of a movie is a temporal media as it defines a canonic
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >A ProductionLocation is a location which is referred to during the production process of content.</rdfs:isDefinedBy>
   </owl:Class>
-  <owl:Class>
-    <owl:complementOf>
-      <owl:Class rdf:about="#HistoricalEvent"/>
-    </owl:complementOf>
-  </owl:Class>
   <owl:Class rdf:ID="TextualComposition">
     <rdfs:subClassOf rdf:resource="#TextualObject"/>
   </owl:Class>
@@ -1321,22 +1335,11 @@ For instance, a PDF file of a book or a .jpg picture.</rdfs:isDefinedBy>
   </owl:Class>
   <owl:Class rdf:about="#Project">
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >Un Project représente un projet de production, qui renvoit à entité administrative auquelle une organisation transfère des ressources (humaines, financières, équipements etc.) pour accomplir des objectifs. Il s'agit d'une Mission de gestion qui ne fabrique rien, mais dirige, organise et délégue le travail et les ressources à d'autres Missions (Activity et Task).
-Par exemple, le Projet Magazine#48 représente le processus de création de l'épisode 48 d'un programme d'information (résultat), qui consiste à commenter des évènements culturels de l'année dernière (ressource).</rdfs:isDefinedBy>
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Project is an editorial production process being carried through. The project is a management Mission which does not create content on it's own but will delegate other Missions to do it under it's guidance. 
 For instance, Magazine#48 Project leads to the creation of a programme by creating related Activities and Tasks.</rdfs:isDefinedBy>
-    <rdfs:subClassOf>
-      <owl:Restriction>
-        <owl:onProperty>
-          <owl:TransitiveProperty rdf:about="#isPartOfTransitive"/>
-        </owl:onProperty>
-        <owl:allValuesFrom rdf:resource="#Project"/>
-      </owl:Restriction>
-    </rdfs:subClassOf>
-    <rdfs:subClassOf>
-      <owl:Class rdf:about="#Mission"/>
-    </rdfs:subClassOf>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Un Project représente un projet de production, qui renvoit à entité administrative auquelle une organisation transfère des ressources (humaines, financières, équipements etc.) pour accomplir des objectifs. Il s'agit d'une Mission de gestion qui ne fabrique rien, mais dirige, organise et délégue le travail et les ressources à d'autres Missions (Activity et Task).
+Par exemple, le Projet Magazine#48 représente le processus de création de l'épisode 48 d'un programme d'information (résultat), qui consiste à commenter des évènements culturels de l'année dernière (ressource).</rdfs:isDefinedBy>
     <rdfs:subClassOf>
       <owl:Restriction>
         <owl:allValuesFrom>
@@ -1349,14 +1352,27 @@ For instance, Magazine#48 Project leads to the creation of a programme by creati
           </owl:Class>
         </owl:allValuesFrom>
         <owl:onProperty>
-          <owl:TransitiveProperty rdf:about="#hasPartTransitive"/>
+          <owl:ObjectProperty rdf:about="#hasPartTransitive"/>
         </owl:onProperty>
       </owl:Restriction>
     </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Mission"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom>
+          <owl:Class rdf:about="#Project"/>
+        </owl:allValuesFrom>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#isPartOfTransitive"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <owl:disjointWith rdf:resource="#Task"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#Activity"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#Task"/>
   </owl:Class>
   <owl:Class rdf:about="#CameraAxes">
     <owl:disjointWith rdf:resource="#ElementMovements"/>
@@ -1389,10 +1405,10 @@ For instance, Magazine#48 Project leads to the creation of a programme by creati
     <owl:disjointWith>
       <owl:Class rdf:about="#Cuts"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#SubjectivityTypes"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#ShotValues"/>
     </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SubjectivityTypes"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#WithinFramePositions"/>
     </owl:disjointWith>
@@ -1407,7 +1423,6 @@ For instance, Magazine#48 Project leads to the creation of a programme by creati
     </rdfs:subClassOf>
   </owl:Class>
   <owl:Class rdf:ID="Magazine">
-    <rdfs:subClassOf rdf:resource="#Program"/>
     <rdfs:subClassOf>
       <owl:Restriction>
         <owl:someValuesFrom rdf:resource="#Subject"/>
@@ -1416,6 +1431,7 @@ For instance, Magazine#48 Project leads to the creation of a programme by creati
         </owl:onProperty>
       </owl:Restriction>
     </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="#Program"/>
   </owl:Class>
   <owl:Class rdf:ID="MultiServiceDevice">
     <rdfs:subClassOf rdf:resource="#Device"/>
@@ -1432,10 +1448,11 @@ For instance, Magazine#48 Project leads to the creation of a programme by creati
       <owl:Class rdf:ID="LinguisticSkill"/>
     </owl:disjointWith>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >ProfessionalSkill is a contributor’s ability to perform specific task and understand professional instructions and notations. For instance, "Framing" is an contributor’s ability to handle a camera given director's instructions.</rdfs:isDefinedBy>
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Une ProfessionalSKill représente la capacité d'un contributeur à réaliser certaines tâches liées à un domaine professionnel, ainsi qu'à comprendre les instructions et les notations utilisées dans ce domaine. 
 Par exemple, la capacité de "cadrage" représente la capacité d'un contributeur à tenir une caméra en suivant les instructions de cadrage d'un réalisateur (plan large, plan rapproché etc.).</rdfs:isDefinedBy>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >ProfessionalSkill is a contributor’s ability to perform specific task and understand professional instructions and notations. For instance, "Framing" is an contributor’s ability to handle a camera given director's instructions.</rdfs:isDefinedBy>
+    <rdfs:subClassOf rdf:resource="#Skill"/>
     <rdfs:subClassOf>
       <owl:Restriction>
         <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
@@ -1445,19 +1462,16 @@ Par exemple, la capacité de "cadrage" représente la capacité d'un contributeu
         </owl:onProperty>
       </owl:Restriction>
     </rdfs:subClassOf>
-    <rdfs:subClassOf rdf:resource="#Skill"/>
   </owl:Class>
-  <owl:Class rdf:ID="FilmedElement">
-    <rdfs:subClassOf>
-      <owl:Class rdf:about="#EditorialObject"/>
-    </rdfs:subClassOf>
+  <owl:Class rdf:about="#FilmedElement">
     <rdfs:subClassOf>
       <owl:Restriction>
         <owl:onProperty>
-          <owl:ObjectProperty rdf:about="#composedOf"/>
+          <owl:ObjectProperty rdf:ID="hasPrescription"/>
         </owl:onProperty>
-        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
-        >0</owl:cardinality>
+        <owl:allValuesFrom>
+          <owl:Class rdf:about="#FilmedElementAnnotation"/>
+        </owl:allValuesFrom>
       </owl:Restriction>
     </rdfs:subClassOf>
     <rdfs:subClassOf>
@@ -1473,11 +1487,21 @@ Par exemple, la capacité de "cadrage" représente la capacité d'un contributeu
     <rdfs:subClassOf>
       <owl:Restriction>
         <owl:onProperty>
-          <owl:ObjectProperty rdf:ID="hasPrescription"/>
+          <owl:ObjectProperty rdf:about="#composedOf"/>
         </owl:onProperty>
-        <owl:allValuesFrom>
-          <owl:Class rdf:about="#FilmedElementAnnotation"/>
-        </owl:allValuesFrom>
+        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+        >0</owl:cardinality>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#EditorialObject"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#hasRealisation"/>
+        </owl:onProperty>
+        <owl:allValuesFrom rdf:resource="#TemporalObject"/>
       </owl:Restriction>
     </rdfs:subClassOf>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
@@ -1520,10 +1544,10 @@ Par exemple, la capacité de "cadrage" représente la capacité d'un contributeu
     <owl:disjointWith>
       <owl:Class rdf:about="#Profile"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#USE"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#Identifier"/>
     </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#USE"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#Event"/>
     </owl:disjointWith>
@@ -1645,8 +1669,8 @@ Par exemple, la capacité de "cadrage" représente la capacité d'un contributeu
     <owl:disjointWith>
       <owl:Class rdf:about="#Opus"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#SoftwareContributor"/>
     <owl:disjointWith rdf:resource="#View"/>
+    <owl:disjointWith rdf:resource="#SoftwareContributor"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#Right"/>
     </owl:disjointWith>
@@ -1689,10 +1713,10 @@ For instance, we may create organization-specific or media-specific (audio, vide
       <owl:Class rdf:about="#Location"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Right"/>
+      <owl:Class rdf:about="#Role"/>
     </owl:disjointWith>
     <owl:disjointWith>
-      <owl:Class rdf:about="#Role"/>
+      <owl:Class rdf:about="#Right"/>
     </owl:disjointWith>
     <owl:disjointWith>
       <owl:Class rdf:about="#Event"/>
@@ -1709,10 +1733,10 @@ For instance, we may create organization-specific or media-specific (audio, vide
     <owl:disjointWith>
       <owl:Class rdf:about="#Position"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#Population"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#ContentObject"/>
     </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Population"/>
     <owl:disjointWith rdf:resource="#MissionSettlement"/>
   </owl:Class>
   <owl:Class rdf:about="#Opus">
@@ -1741,10 +1765,10 @@ For instance, we may create organization-specific or media-specific (audio, vide
     <owl:disjointWith rdf:resource="#USE"/>
     <owl:disjointWith rdf:resource="#MissionSettlement"/>
     <owl:disjointWith rdf:resource="#ConceptualModel"/>
-    <owl:disjointWith rdf:resource="#Profile"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#Position"/>
     </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Profile"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#ContentObject"/>
     </owl:disjointWith>
@@ -1789,12 +1813,12 @@ These relations change during the Opus production process as their targets are c
     <owl:disjointWith>
       <owl:Class rdf:about="#Notation"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#ConceptualModel"/>
     <owl:disjointWith rdf:resource="#Population"/>
-    <owl:disjointWith rdf:resource="#TemporalObject"/>
+    <owl:disjointWith rdf:resource="#ConceptualModel"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#ContentObject"/>
     </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#TemporalObject"/>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Role is a generic kind of job of an editorial production process. A job may refer to a minimal know-how (Skill) requirements (requiresProficiency relation). For instance, a Cameraman is at least someone who knows the basic manipulation of professional cameras.</rdfs:isDefinedBy>
     <owl:disjointWith>
@@ -1892,11 +1916,28 @@ Par exemple, un caméraman doit avoir une compétences sur le maniement d'une ca
     >ShootingSet is the place where the shooting of audiovisual material is performed.</rdfs:isDefinedBy>
     <rdfs:subClassOf rdf:resource="#ProductionLocation"/>
   </owl:Class>
-  <owl:Class rdf:ID="Subshot">
+  <owl:Class rdf:about="#Subshot">
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >SubShot is a part of a Shot with a continuous camera movement or a constant framing.</rdfs:isDefinedBy>
     <rdfs:subClassOf>
-      <owl:Class rdf:about="#EditorialObject"/>
+      <owl:Restriction>
+        <owl:allValuesFrom>
+          <owl:Class rdf:about="#SubshotAnnotation"/>
+        </owl:allValuesFrom>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#hasPrescription"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#hasDescription"/>
+        </owl:onProperty>
+        <owl:allValuesFrom>
+          <owl:Class rdf:about="#SubshotAnnotation"/>
+        </owl:allValuesFrom>
+      </owl:Restriction>
     </rdfs:subClassOf>
     <rdfs:subClassOf>
       <owl:Restriction>
@@ -1908,32 +1949,23 @@ Par exemple, un caméraman doit avoir une compétences sur le maniement d'une ca
       </owl:Restriction>
     </rdfs:subClassOf>
     <rdfs:subClassOf>
-      <owl:Restriction>
-        <owl:allValuesFrom>
-          <owl:Class rdf:about="#SubshotAnnotation"/>
-        </owl:allValuesFrom>
-        <owl:onProperty>
-          <owl:ObjectProperty rdf:about="#hasDescription"/>
-        </owl:onProperty>
-      </owl:Restriction>
+      <owl:Class rdf:about="#EditorialObject"/>
     </rdfs:subClassOf>
     <rdfs:subClassOf>
       <owl:Restriction>
-        <owl:allValuesFrom>
-          <owl:Class rdf:about="#SubshotAnnotation"/>
-        </owl:allValuesFrom>
+        <owl:allValuesFrom rdf:resource="#TemporalObject"/>
         <owl:onProperty>
-          <owl:ObjectProperty rdf:about="#hasPrescription"/>
+          <owl:ObjectProperty rdf:about="#hasRealisation"/>
         </owl:onProperty>
       </owl:Restriction>
     </rdfs:subClassOf>
   </owl:Class>
   <owl:Class rdf:about="#ShotAnnotation">
     <owl:disjointWith rdf:resource="#CameraSetProperties"/>
-    <owl:disjointWith rdf:resource="#Lightning"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#SubjectAnnotation"/>
     </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Lightning"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#SubshotAnnotation"/>
     </owl:disjointWith>
@@ -1960,16 +1992,17 @@ Par exemple, un caméraman doit avoir une compétences sur le maniement d'une ca
     <owl:disjointWith rdf:resource="#Subject"/>
     <rdfs:subClassOf>
       <owl:Restriction>
-        <owl:allValuesFrom>
-          <owl:Class>
-            <owl:unionOf rdf:parseType="Collection">
-              <owl:Class rdf:about="#FilmedElement"/>
-              <owl:Class rdf:about="#Subshot"/>
-            </owl:unionOf>
-          </owl:Class>
-        </owl:allValuesFrom>
+        <owl:allValuesFrom rdf:resource="#ShotAnnotation"/>
         <owl:onProperty>
-          <owl:ObjectProperty rdf:about="#composedOf"/>
+          <owl:ObjectProperty rdf:about="#hasPrescription"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="#ShotAnnotation"/>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#hasDescription"/>
         </owl:onProperty>
       </owl:Restriction>
     </rdfs:subClassOf>
@@ -1979,17 +2012,24 @@ Par exemple, un caméraman doit avoir une compétences sur le maniement d'une ca
     <rdfs:subClassOf>
       <owl:Restriction>
         <owl:onProperty>
-          <owl:ObjectProperty rdf:about="#hasDescription"/>
+          <owl:ObjectProperty rdf:about="#composedOf"/>
         </owl:onProperty>
-        <owl:allValuesFrom rdf:resource="#ShotAnnotation"/>
+        <owl:allValuesFrom>
+          <owl:Class>
+            <owl:unionOf rdf:parseType="Collection">
+              <owl:Class rdf:about="#FilmedElement"/>
+              <owl:Class rdf:about="#Subshot"/>
+            </owl:unionOf>
+          </owl:Class>
+        </owl:allValuesFrom>
       </owl:Restriction>
     </rdfs:subClassOf>
     <rdfs:subClassOf>
       <owl:Restriction>
         <owl:onProperty>
-          <owl:ObjectProperty rdf:about="#hasPrescription"/>
+          <owl:ObjectProperty rdf:about="#hasRealisation"/>
         </owl:onProperty>
-        <owl:allValuesFrom rdf:resource="#ShotAnnotation"/>
+        <owl:allValuesFrom rdf:resource="#TemporalObject"/>
       </owl:Restriction>
     </rdfs:subClassOf>
   </owl:Class>
@@ -2030,17 +2070,17 @@ For instance, the label "american shot" may be described as an English word, a m
     <owl:disjointWith>
       <owl:Class rdf:about="#Right"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#View"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#ContentObject"/>
     </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#View"/>
   </owl:Class>
   <owl:Class rdf:about="#LinguisticSkill">
     <owl:disjointWith rdf:resource="#ProfessionalSkill"/>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >LinguisticSkill is a contributor’s ability to speak, read and understand a given natural language</rdfs:isDefinedBy>
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >une LinguisticSkill représente la capacité d'un contributeur à parler, lire et comprendre une langue humaine.</rdfs:isDefinedBy>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >LinguisticSkill is a contributor’s ability to speak, read and understand a given natural language</rdfs:isDefinedBy>
     <rdfs:subClassOf rdf:resource="#Skill"/>
   </owl:Class>
   <owl:Class rdf:about="#FilmedElementAnnotation">
@@ -2072,11 +2112,11 @@ For instance, the label "american shot" may be described as an English word, a m
     <owl:disjointWith rdf:resource="#HistoricalOrganization"/>
   </owl:Class>
   <owl:Class rdf:about="#AuthorityList">
-    <owl:disjointWith rdf:resource="#NaturalLanguage"/>
-    <owl:disjointWith rdf:resource="#SyntaxEncodingScheme"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#VocabularyEncodingScheme"/>
     </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#SyntaxEncodingScheme"/>
+    <owl:disjointWith rdf:resource="#NaturalLanguage"/>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >AuthorityList is a finite list of Terms which lexical values have been arbitrarily chosen. It enables to normalize the range of denominations offered for a given propriety.
 For instance, the ISO 639-2 norm is a list of three-letters code referring to a language name where "eng" stands for english.</rdfs:isDefinedBy>
@@ -2085,11 +2125,9 @@ For instance, the ISO 639-2 norm is a list of three-letters code referring to a 
   <owl:Class rdf:about="#HistoricalEvent">
     <rdfs:subClassOf>
       <owl:Restriction>
-        <owl:allValuesFrom>
-          <owl:Class rdf:about="#HistoricalLocation"/>
-        </owl:allValuesFrom>
+        <owl:allValuesFrom rdf:resource="#HistoricalAgent"/>
         <owl:onProperty>
-          <owl:InverseFunctionalProperty rdf:ID="isLocatedIn"/>
+          <owl:ObjectProperty rdf:ID="hasParticipant"/>
         </owl:onProperty>
       </owl:Restriction>
     </rdfs:subClassOf>
@@ -2098,10 +2136,12 @@ For instance, the ISO 639-2 norm is a list of three-letters code referring to a 
     </rdfs:subClassOf>
     <rdfs:subClassOf>
       <owl:Restriction>
+        <owl:allValuesFrom>
+          <owl:Class rdf:about="#HistoricalLocation"/>
+        </owl:allValuesFrom>
         <owl:onProperty>
-          <owl:ObjectProperty rdf:ID="hasParticipant"/>
+          <owl:ObjectProperty rdf:ID="isLocatedIn"/>
         </owl:onProperty>
-        <owl:allValuesFrom rdf:resource="#HistoricalAgent"/>
       </owl:Restriction>
     </rdfs:subClassOf>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
@@ -2126,25 +2166,28 @@ For instance, the ISO 639-2 norm is a list of three-letters code referring to a 
   </owl:Class>
   <owl:Class rdf:about="#DigitalResource">
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >A DigitalResource is a sequence of bits with its own address, like a digital file. Therefore, it is never directly accessible to a human. The description of the DigitalResource’s content by Notation (isMemberOf relation) indicates what kind of software is needed to build a view on the file’s content and what kind of knowledge is needed to understand it.</rdfs:isDefinedBy>
+    >A DigitalResource is a sequence of bits with its own address, like a digital file or a part of a digital file. 
+A specific relation (conformsTo) indicates which encoding character system is used and the file format (SyntaxEncodingScheme). 
+Other information, like the vocabulary or the natural language (Notation) used in the resource may be specified by the more general isMemberOf/hasMember relation.
+A DigitalResource may also represent a digital representation of other kinds of MediaMapObject (stated through the isAManifestationOf/hasManifestation relation), or more specifically, to say that the resource depicts one of these objects (illustrates/isIllustratedBy).</rdfs:isDefinedBy>
+    <rdfs:subClassOf rdf:resource="#MediaMapObject"/>
     <rdfs:subClassOf>
       <owl:Restriction>
+        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+        >1</owl:cardinality>
         <owl:onProperty>
           <owl:DatatypeProperty rdf:ID="documentType"/>
         </owl:onProperty>
-        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
-        >1</owl:cardinality>
       </owl:Restriction>
     </rdfs:subClassOf>
-    <rdfs:subClassOf rdf:resource="#MediaMapObject"/>
-    <owl:disjointWith rdf:resource="#Entity"/>
-    <owl:disjointWith>
-      <owl:Class rdf:about="#Term"/>
-    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Note"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#PhysicalResource"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#Note"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Term"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Entity"/>
   </owl:Class>
   <owl:Class rdf:about="#SoundCharacterisations">
     <owl:disjointWith rdf:resource="#WithinFramePositions"/>
@@ -2192,20 +2235,20 @@ For instance, the ISO 639-2 norm is a list of three-letters code referring to a 
       <owl:Class rdf:about="#Agent"/>
     </owl:disjointWith>
     <owl:disjointWith rdf:resource="#Identifier"/>
-    <owl:disjointWith rdf:resource="#MissionSettlement"/>
+    <owl:disjointWith rdf:resource="#Role"/>
     <owl:disjointWith rdf:resource="#View"/>
     <owl:disjointWith rdf:resource="#IntellectualProperty"/>
-    <owl:disjointWith rdf:resource="#Role"/>
+    <owl:disjointWith rdf:resource="#MissionSettlement"/>
     <rdfs:subClassOf rdf:resource="#Entity"/>
-    <owl:disjointWith rdf:resource="#Skill"/>
+    <owl:disjointWith rdf:resource="#Profile"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#Right"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#Profile"/>
-    <owl:disjointWith rdf:resource="#Notation"/>
+    <owl:disjointWith rdf:resource="#Skill"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#Location"/>
     </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#Notation"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#CommissionOrder"/>
     </owl:disjointWith>
@@ -2232,9 +2275,9 @@ For instance, the ISO 639-2 norm is a list of three-letters code referring to a 
       <owl:Class rdf:about="#SoundSpatialDimensions"/>
     </owl:disjointWith>
     <owl:disjointWith rdf:resource="#SubjectivityTypes"/>
-    <owl:disjointWith rdf:resource="#AspectRatioTypes"/>
-    <owl:disjointWith rdf:resource="#ElementMovements"/>
     <owl:disjointWith rdf:resource="#StorytellingTypes"/>
+    <owl:disjointWith rdf:resource="#ElementMovements"/>
+    <owl:disjointWith rdf:resource="#AspectRatioTypes"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#LightningTypes"/>
     </owl:disjointWith>
@@ -2266,10 +2309,10 @@ For instance, the ISO 639-2 norm is a list of three-letters code referring to a 
       <owl:Class rdf:about="#SoundQualities"/>
     </owl:disjointWith>
     <owl:disjointWith rdf:resource="#WithinFramePositions"/>
+    <owl:disjointWith rdf:resource="#AspectRatioTypes"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#LightningTypes"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#AspectRatioTypes"/>
     <owl:disjointWith rdf:resource="#SoundTypes"/>
     <owl:disjointWith rdf:resource="#CameraAxes"/>
     <owl:disjointWith rdf:resource="#ElementOrientations"/>
@@ -2281,12 +2324,12 @@ For instance, the ISO 639-2 norm is a list of three-letters code referring to a 
     </rdfs:subClassOf>
   </owl:Class>
   <owl:Class rdf:about="#PhysicalResource">
+    <owl:disjointWith rdf:resource="#Note"/>
+    <owl:disjointWith rdf:resource="#Entity"/>
+    <owl:disjointWith rdf:resource="#DigitalResource"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#Term"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#DigitalResource"/>
-    <owl:disjointWith rdf:resource="#Entity"/>
-    <owl:disjointWith rdf:resource="#Note"/>
     <rdfs:subClassOf rdf:resource="#MediaMapObject"/>
   </owl:Class>
   <owl:Class rdf:about="#ContentObject">
@@ -2310,8 +2353,8 @@ For instance, the ISO 639-2 norm is a list of three-letters code referring to a 
       <owl:Class rdf:about="#Location"/>
     </owl:disjointWith>
     <owl:disjointWith rdf:resource="#Population"/>
-    <owl:disjointWith rdf:resource="#Identifier"/>
     <owl:disjointWith rdf:resource="#SoftwareContributor"/>
+    <owl:disjointWith rdf:resource="#Identifier"/>
     <owl:disjointWith rdf:resource="#Profile"/>
     <owl:disjointWith rdf:resource="#View"/>
     <owl:disjointWith rdf:resource="#Notation"/>
@@ -2344,17 +2387,6 @@ For instance, Anne as the producer has validation right upon the script created 
     <owl:disjointWith rdf:resource="#Identifier"/>
     <owl:disjointWith rdf:resource="#Role"/>
     <owl:disjointWith rdf:resource="#Profile"/>
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >Un CommissionOrder représente une délégation de droits et de responsabilités (Right) sur une Mission. 
-Cette délégation s'applique à un poste (Position), et donc indirectement au contributeur (HistoricalAgent) occupant ce poste.
-Par exemple, Anne est productrice et de ce fait obtient un droit de validation sur la tâche d'écriture du plan de tournage.</rdfs:isDefinedBy>
-    <owl:disjointWith rdf:resource="#ContentObject"/>
-    <owl:disjointWith>
-      <owl:Class rdf:about="#Location"/>
-    </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#SoftwareContributor"/>
-    <owl:disjointWith rdf:resource="#TemporalObject"/>
-    <owl:disjointWith rdf:resource="#IntellectualProperty"/>
     <rdfs:subClassOf>
       <owl:Restriction>
         <owl:onProperty>
@@ -2364,6 +2396,17 @@ Par exemple, Anne est productrice et de ce fait obtient un droit de validation s
         >1</owl:minCardinality>
       </owl:Restriction>
     </rdfs:subClassOf>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Un CommissionOrder représente une délégation de droits et de responsabilités (Right) sur une Mission. 
+Cette délégation s'applique à un poste (Position), et donc indirectement au contributeur (HistoricalAgent) occupant ce poste.
+Par exemple, Anne est productrice et de ce fait obtient un droit de validation sur la tâche d'écriture du plan de tournage.</rdfs:isDefinedBy>
+    <owl:disjointWith rdf:resource="#ContentObject"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#Location"/>
+    </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#TemporalObject"/>
+    <owl:disjointWith rdf:resource="#SoftwareContributor"/>
+    <owl:disjointWith rdf:resource="#IntellectualProperty"/>
     <rdfs:subClassOf rdf:resource="#Entity"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#Right"/>
@@ -2374,8 +2417,8 @@ Par exemple, Anne est productrice et de ce fait obtient un droit de validation s
     <owl:disjointWith>
       <owl:Class rdf:about="#Agent"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#View"/>
     <owl:disjointWith rdf:resource="#Notation"/>
+    <owl:disjointWith rdf:resource="#View"/>
   </owl:Class>
   <owl:Class rdf:ID="InteractiveMedia">
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
@@ -2411,16 +2454,27 @@ For instance, a network of web pages (such as a website) is an interactive media
     <owl:disjointWith rdf:resource="#ElementOrientations"/>
     <owl:disjointWith rdf:resource="#SoundTypes"/>
   </owl:Class>
+  <owl:Class>
+    <owl:intersectionOf rdf:parseType="Collection">
+      <owl:Class rdf:about="#Event"/>
+      <owl:Class>
+        <owl:complementOf rdf:resource="#HistoricalEvent"/>
+      </owl:Class>
+    </owl:intersectionOf>
+  </owl:Class>
   <owl:Class rdf:ID="News">
-    <rdfs:subClassOf rdf:resource="#Program"/>
     <rdfs:subClassOf>
       <owl:Restriction>
+        <owl:someValuesFrom rdf:resource="#Subject"/>
         <owl:onProperty>
           <owl:ObjectProperty rdf:about="#composedOf"/>
         </owl:onProperty>
-        <owl:someValuesFrom rdf:resource="#Subject"/>
       </owl:Restriction>
     </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="#Program"/>
+  </owl:Class>
+  <owl:Class>
+    <owl:complementOf rdf:resource="#HistoricalEvent"/>
   </owl:Class>
   <owl:Class>
     <owl:unionOf rdf:parseType="Collection">
@@ -2451,11 +2505,11 @@ For instance, Anne (as a Producer) is not allowed to write the shooting script b
     <owl:disjointWith rdf:resource="#ContentObject"/>
     <owl:disjointWith rdf:resource="#Identifier"/>
     <owl:disjointWith rdf:resource="#Notation"/>
-    <owl:disjointWith rdf:resource="#Skill"/>
-    <owl:disjointWith rdf:resource="#USE"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#Agent"/>
     </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#USE"/>
+    <owl:disjointWith rdf:resource="#Skill"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#Location"/>
     </owl:disjointWith>
@@ -2463,8 +2517,8 @@ For instance, Anne (as a Producer) is not allowed to write the shooting script b
     <owl:disjointWith>
       <owl:Class rdf:about="#Position"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#CommissionOrder"/>
     <owl:disjointWith rdf:resource="#Role"/>
+    <owl:disjointWith rdf:resource="#CommissionOrder"/>
   </owl:Class>
   <owl:Class rdf:about="#ShotValues">
     <owl:disjointWith rdf:resource="#ElementPostures"/>
@@ -2483,8 +2537,8 @@ For instance, Anne (as a Producer) is not allowed to write the shooting script b
     <owl:disjointWith rdf:resource="#ElementMovements"/>
     <owl:disjointWith rdf:resource="#StorytellingTypes"/>
     <rdfs:subClassOf rdf:resource="#AuthorityList"/>
-    <owl:disjointWith rdf:resource="#AspectRatioTypes"/>
     <owl:disjointWith rdf:resource="#WithinFramePositions"/>
+    <owl:disjointWith rdf:resource="#AspectRatioTypes"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#SoundSpatialDimensions"/>
     </owl:disjointWith>
@@ -2496,11 +2550,11 @@ For instance, Anne (as a Producer) is not allowed to write the shooting script b
     <owl:disjointWith rdf:resource="#Right"/>
     <owl:disjointWith rdf:resource="#ConceptualModel"/>
     <owl:disjointWith rdf:resource="#Profile"/>
-    <owl:disjointWith rdf:resource="#IntellectualProperty"/>
+    <owl:disjointWith rdf:resource="#Opus"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#Position"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#Opus"/>
+    <owl:disjointWith rdf:resource="#IntellectualProperty"/>
     <owl:disjointWith rdf:resource="#Skill"/>
     <owl:disjointWith rdf:resource="#MissionSettlement"/>
     <owl:disjointWith rdf:resource="#Role"/>
@@ -2565,10 +2619,10 @@ Par exemple, l'Agent chargé d'identifier les personnes dans un plan peut être 
     <owl:disjointWith>
       <owl:Class rdf:about="#Composition"/>
     </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#FilmedSpace"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#Sound"/>
     </owl:disjointWith>
+    <owl:disjointWith rdf:resource="#FilmedSpace"/>
     <rdfs:subClassOf rdf:resource="#Annotation"/>
   </owl:Class>
   <owl:Class rdf:about="#SoundSpatialDimensions">
@@ -2583,19 +2637,18 @@ Par exemple, l'Agent chargé d'identifier les personnes dans un plan peut être 
       <owl:Class rdf:about="#ShotProportions"/>
     </owl:disjointWith>
     <owl:disjointWith rdf:resource="#ShotValues"/>
-    <owl:disjointWith rdf:resource="#ElementOrientations"/>
     <owl:disjointWith rdf:resource="#ElementMovements"/>
+    <owl:disjointWith rdf:resource="#ElementOrientations"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#SoundQualities"/>
     </owl:disjointWith>
     <rdfs:subClassOf rdf:resource="#AuthorityList"/>
     <owl:disjointWith rdf:resource="#WithinFramePositions"/>
     <owl:disjointWith rdf:resource="#SoundCharacterisations"/>
-    <owl:disjointWith rdf:resource="#CameraAxes"/>
     <owl:disjointWith rdf:resource="#AspectRatioTypes"/>
+    <owl:disjointWith rdf:resource="#CameraAxes"/>
   </owl:Class>
   <owl:Class rdf:ID="Drama">
-    <rdfs:subClassOf rdf:resource="#Program"/>
     <rdfs:subClassOf>
       <owl:Restriction>
         <owl:onProperty>
@@ -2604,11 +2657,14 @@ Par exemple, l'Agent chargé d'identifier les personnes dans un plan peut être 
         <owl:allValuesFrom rdf:resource="#Scene"/>
       </owl:Restriction>
     </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="#Program"/>
   </owl:Class>
   <owl:Class rdf:about="#FictionalAgent">
-    <rdfs:subClassOf rdf:resource="#Agent"/>
     <rdfs:subClassOf>
       <owl:Restriction>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:ID="isAParticipantOf"/>
+        </owl:onProperty>
         <owl:allValuesFrom>
           <owl:Class>
             <owl:intersectionOf rdf:parseType="Collection">
@@ -2619,11 +2675,9 @@ Par exemple, l'Agent chargé d'identifier les personnes dans un plan peut être 
             </owl:intersectionOf>
           </owl:Class>
         </owl:allValuesFrom>
-        <owl:onProperty>
-          <owl:ObjectProperty rdf:ID="isAParticipantOf"/>
-        </owl:onProperty>
       </owl:Restriction>
     </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="#Agent"/>
     <owl:disjointWith rdf:resource="#HistoricalAgent"/>
   </owl:Class>
   <owl:Class rdf:about="#Position">
@@ -2646,16 +2700,16 @@ Par exemple, Boris est engagé en tant qu'assistant réalisateur par la RTBF dan
     <owl:disjointWith rdf:resource="#Identifier"/>
     <owl:disjointWith rdf:resource="#SoftwareContributor"/>
     <owl:disjointWith rdf:resource="#Right"/>
-    <owl:disjointWith rdf:resource="#Population"/>
     <owl:disjointWith rdf:resource="#Agent"/>
+    <owl:disjointWith rdf:resource="#Population"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#Event"/>
     </owl:disjointWith>
     <owl:disjointWith rdf:resource="#IntellectualProperty"/>
     <owl:disjointWith rdf:resource="#View"/>
     <owl:disjointWith rdf:resource="#Role"/>
-    <owl:disjointWith rdf:resource="#ConceptualModel"/>
     <owl:disjointWith rdf:resource="#Annotation"/>
+    <owl:disjointWith rdf:resource="#ConceptualModel"/>
     <owl:disjointWith>
       <owl:Class rdf:about="#Location"/>
     </owl:disjointWith>
@@ -2692,15 +2746,15 @@ Par exemple, Boris est engagé en tant qu'assistant réalisateur par la RTBF dan
 Un évènement peut également être le sujet d'une oeuvre (Opus).</rdfs:isDefinedBy>
     <owl:disjointWith rdf:resource="#ContentObject"/>
     <owl:disjointWith rdf:resource="#Population"/>
-    <owl:disjointWith rdf:resource="#ConceptualModel"/>
     <owl:disjointWith rdf:resource="#SoftwareContributor"/>
+    <owl:disjointWith rdf:resource="#ConceptualModel"/>
     <owl:disjointWith rdf:resource="#Skill"/>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Event is a duration in time, for instance my birthday last 24 hours each year. It may be located somewhere (isLocatedIn relation) and may involve people (hasParticipant relation).</rdfs:isDefinedBy>
     <owl:disjointWith rdf:resource="#Right"/>
     <owl:disjointWith rdf:resource="#Opus"/>
-    <owl:disjointWith rdf:resource="#Role"/>
     <owl:disjointWith rdf:resource="#Notation"/>
+    <owl:disjointWith rdf:resource="#Role"/>
     <owl:disjointWith rdf:resource="#Annotation"/>
     <owl:disjointWith rdf:resource="#TemporalObject"/>
     <owl:disjointWith rdf:resource="#Position"/>
@@ -2712,9 +2766,9 @@ Un évènement peut également être le sujet d'une oeuvre (Opus).</rdfs:isDefin
     >VocabularyEncodingScheme is a chosen set of Terms such as a business thesaurus. It may be used in a general way to model naming conventions within a business, organisational or geographic context. 
 A metadata description scheme such as Dublin Core (see http://dublincore.org/documents/dcmi-terms/) is one example.</rdfs:isDefinedBy>
     <rdfs:subClassOf rdf:resource="#Notation"/>
-    <owl:disjointWith rdf:resource="#AuthorityList"/>
-    <owl:disjointWith rdf:resource="#NaturalLanguage"/>
     <owl:disjointWith rdf:resource="#SyntaxEncodingScheme"/>
+    <owl:disjointWith rdf:resource="#NaturalLanguage"/>
+    <owl:disjointWith rdf:resource="#AuthorityList"/>
   </owl:Class>
   <owl:Class rdf:ID="UserInterface">
     <rdfs:subClassOf rdf:resource="#Interface"/>
@@ -2727,20 +2781,20 @@ A metadata description scheme such as Dublin Core (see http://dublincore.org/doc
     <owl:disjointWith rdf:resource="#UserInterface"/>
   </owl:Class>
   <owl:Class rdf:about="#Term">
-    <owl:disjointWith rdf:resource="#DigitalResource"/>
-    <owl:disjointWith rdf:resource="#Entity"/>
-    <owl:disjointWith rdf:resource="#PhysicalResource"/>
     <owl:disjointWith rdf:resource="#Note"/>
+    <owl:disjointWith rdf:resource="#PhysicalResource"/>
+    <owl:disjointWith rdf:resource="#Entity"/>
+    <owl:disjointWith rdf:resource="#DigitalResource"/>
+    <rdfs:subClassOf rdf:resource="#MediaMapObject"/>
     <rdfs:subClassOf>
       <owl:Restriction>
-        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
-        >1</owl:cardinality>
         <owl:onProperty>
           <owl:DatatypeProperty rdf:ID="value"/>
         </owl:onProperty>
+        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+        >1</owl:cardinality>
       </owl:Restriction>
     </rdfs:subClassOf>
-    <rdfs:subClassOf rdf:resource="#MediaMapObject"/>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Term is a lexical value along with its characterization. Each aspect of a Term is described by a Notation which refers to a knowledge needed to interpret it. Therefore, each Term is connected to its relevant context of use. The lexical value is encoded as a string, but the real datatype of the value could be anything, word, date, number etc.</rdfs:isDefinedBy>
   </owl:Class>
@@ -2760,9 +2814,9 @@ A metadata description scheme such as Dublin Core (see http://dublincore.org/doc
     <owl:disjointWith rdf:resource="#Identifier"/>
     <owl:disjointWith rdf:resource="#Profile"/>
     <owl:disjointWith rdf:resource="#Population"/>
-    <owl:disjointWith rdf:resource="#TemporalObject"/>
-    <owl:disjointWith rdf:resource="#Role"/>
     <owl:disjointWith rdf:resource="#SoftwareContributor"/>
+    <owl:disjointWith rdf:resource="#Role"/>
+    <owl:disjointWith rdf:resource="#TemporalObject"/>
     <owl:disjointWith rdf:resource="#Opus"/>
     <owl:disjointWith rdf:resource="#IntellectualProperty"/>
     <owl:disjointWith rdf:resource="#ContentObject"/>
@@ -2773,19 +2827,45 @@ A metadata description scheme such as Dublin Core (see http://dublincore.org/doc
     <owl:disjointWith rdf:resource="#USE"/>
     <owl:disjointWith rdf:resource="#Annotation"/>
   </owl:Class>
+  <owl:Class>
+    <owl:intersectionOf rdf:parseType="Collection">
+      <owl:Class rdf:about="#Event"/>
+      <owl:Class>
+        <owl:complementOf rdf:resource="#HistoricalEvent"/>
+      </owl:Class>
+    </owl:intersectionOf>
+  </owl:Class>
   <owl:Class rdf:about="#Activity">
-    <owl:disjointWith rdf:resource="#Task"/>
     <owl:disjointWith rdf:resource="#Project"/>
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >Une Activity est une étape ou un jalon d'un projet de production. C'est une Mission de gestion qui consiste à organiser une séquence de Tasks.
-Par exemple, une Activity nommée Post-Production peut regrouper toutes les Tasks montage, retouches, effets spéciaux, post-traitements etc.</rdfs:isDefinedBy>
+    <owl:disjointWith rdf:resource="#Task"/>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Activity is a stage of an editorial production process. It is also a management Mission which does not operate directly on content but delegates the action to Tasks. Activities may be seen as the milestones of a Project. 
 For instance, supervision of all shootings may be an Activity, but actual shooting is performed during a Task.</rdfs:isDefinedBy>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Une Activity est une étape ou un jalon d'un projet de production. C'est une Mission de gestion qui consiste à organiser une séquence de Tasks.
+Par exemple, une Activity nommée Post-Production peut regrouper toutes les Tasks montage, retouches, effets spéciaux, post-traitements etc.</rdfs:isDefinedBy>
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="#Mission"/>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom>
+          <owl:Class>
+            <owl:unionOf rdf:parseType="Collection">
+              <owl:Class rdf:about="#Activity"/>
+              <owl:Class rdf:about="#Task"/>
+            </owl:unionOf>
+          </owl:Class>
+        </owl:allValuesFrom>
+        <owl:onProperty>
+          <owl:ObjectProperty rdf:about="#hasPartTransitive"/>
+        </owl:onProperty>
+      </owl:Restriction>
+    </rdfs:subClassOf>
     <rdfs:subClassOf>
       <owl:Restriction>
         <owl:onProperty>
-          <owl:TransitiveProperty rdf:about="#isPartOfTransitive"/>
+          <owl:ObjectProperty rdf:about="#isPartOfTransitive"/>
         </owl:onProperty>
         <owl:allValuesFrom>
           <owl:Class>
@@ -2797,44 +2877,35 @@ For instance, supervision of all shootings may be an Activity, but actual shooti
         </owl:allValuesFrom>
       </owl:Restriction>
     </rdfs:subClassOf>
-    <rdfs:subClassOf>
-      <owl:Restriction>
-        <owl:onProperty>
-          <owl:TransitiveProperty rdf:about="#hasPartTransitive"/>
-        </owl:onProperty>
-        <owl:allValuesFrom>
-          <owl:Class>
-            <owl:unionOf rdf:parseType="Collection">
-              <owl:Class rdf:about="#Activity"/>
-              <owl:Class rdf:about="#Task"/>
-            </owl:unionOf>
-          </owl:Class>
-        </owl:allValuesFrom>
-      </owl:Restriction>
-    </rdfs:subClassOf>
-    <rdfs:subClassOf>
-      <owl:Class rdf:about="#Mission"/>
-    </rdfs:subClassOf>
   </owl:Class>
   <owl:Class rdf:ID="FictionalEvent">
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >A FictionalEvent occurs into a fictional place (the diegesis) or at a fictional time (during the labour of Heracles in the greek mythology).</rdfs:isDefinedBy>
     <rdfs:subClassOf rdf:resource="#Event"/>
   </owl:Class>
-  <owl:Class rdf:ID="TranscoderDevice">
-    <rdfs:subClassOf rdf:resource="#Device"/>
-  </owl:Class>
   <owl:Class rdf:about="#HistoricalLocation">
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >A HistoricalLocation is located in the real world either in the past or the future.</rdfs:isDefinedBy>
     <rdfs:subClassOf rdf:resource="#Location"/>
   </owl:Class>
+  <owl:Class rdf:ID="TranscoderDevice">
+    <rdfs:subClassOf rdf:resource="#Device"/>
+  </owl:Class>
   <owl:Class rdf:about="#SubtitleTrack">
     <rdfs:subClassOf rdf:resource="#Track"/>
-    <owl:disjointWith rdf:resource="#AudioTrack"/>
     <owl:disjointWith rdf:resource="#VideoTrack"/>
+    <owl:disjointWith rdf:resource="#AudioTrack"/>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >SubtitleTrack is a textual content.</rdfs:isDefinedBy>
+  </owl:Class>
+  <owl:Class rdf:about="#HumanContributor">
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A PhysicalPerson is an individual, e.g. Anne or Boris.</rdfs:isDefinedBy>
+    <owl:disjointWith rdf:resource="#SoftwareContributor"/>
+    <owl:disjointWith>
+      <owl:Class rdf:about="#CorporateContributor"/>
+    </owl:disjointWith>
+    <rdfs:subClassOf rdf:resource="#HistoricalIndividual"/>
   </owl:Class>
   <owl:Class rdf:about="#ShotProportions">
     <rdfs:subClassOf rdf:resource="#AuthorityList"/>
@@ -2851,20 +2922,14 @@ For instance, supervision of all shootings may be an Activity, but actual shooti
       <owl:Class rdf:about="#SoundQualities"/>
     </owl:disjointWith>
     <owl:disjointWith rdf:resource="#LightningTypes"/>
-    <owl:disjointWith rdf:resource="#CameraAxes"/>
     <owl:disjointWith rdf:resource="#StorytellingTypes"/>
+    <owl:disjointWith rdf:resource="#CameraAxes"/>
     <owl:disjointWith rdf:resource="#ElementPostures"/>
     <owl:disjointWith rdf:resource="#ElementMovements"/>
     <owl:disjointWith rdf:resource="#ElementOrientations"/>
   </owl:Class>
-  <owl:Class rdf:about="#HumanContributor">
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >A PhysicalPerson is an individual, e.g. Anne or Boris.</rdfs:isDefinedBy>
-    <owl:disjointWith>
-      <owl:Class rdf:about="#CorporateContributor"/>
-    </owl:disjointWith>
-    <owl:disjointWith rdf:resource="#SoftwareContributor"/>
-    <rdfs:subClassOf rdf:resource="#HistoricalIndividual"/>
+  <owl:Class rdf:ID="ImageMedia">
+    <rdfs:subClassOf rdf:resource="#GraphicalMedia"/>
   </owl:Class>
   <owl:Class rdf:about="#SoundQualities">
     <owl:disjointWith rdf:resource="#ShotValues"/>
@@ -2885,15 +2950,12 @@ For instance, supervision of all shootings may be an Activity, but actual shooti
     <owl:disjointWith rdf:resource="#AspectRatioTypes"/>
     <owl:disjointWith rdf:resource="#ElementOrientations"/>
   </owl:Class>
-  <owl:Class rdf:ID="ImageMedia">
-    <rdfs:subClassOf rdf:resource="#GraphicalMedia"/>
-  </owl:Class>
   <owl:Class rdf:ID="StorageDevice">
     <rdfs:subClassOf rdf:resource="#Device"/>
   </owl:Class>
   <owl:Class rdf:about="#CorporateContributor">
-    <owl:disjointWith rdf:resource="#HumanContributor"/>
     <owl:disjointWith rdf:resource="#SoftwareContributor"/>
+    <owl:disjointWith rdf:resource="#HumanContributor"/>
     <rdfs:subClassOf rdf:resource="#HistoricalOrganization"/>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >CorporateContributor is an organization composed of other agents, e.g. a shooting team..</rdfs:isDefinedBy>
@@ -2916,13 +2978,13 @@ For instance, supervision of all shootings may be an Activity, but actual shooti
   </owl:Class>
   <owl:Class rdf:about="#Mission">
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Mission is a consistent set of actions which is carried out intentionally during a content’s production. These actions may be performed by one or several contributors and affect the content or the production process. For instance, a shooting Mission may be carried out by one cameraman or a complete shooting team. However, a movie production Mission needs much more contributors and its completion requires other Missions to be performed. In some case, management Mission may only define what is to do and then validate the work done. The effect of a Mission on content usually results in the modification or creation of instances. As an example, the creation of an instance of DigitalResource after a transcoding Mission.</rdfs:isDefinedBy>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Une Mission représente un ensemble d'actions cohérentes, réalisées de manière intentionnelles afin de mener à bien un processus de production. 
 Ces actions peuvent être exécutées par un ou plusieurs contributeurs, réutilisant parfois des objets existants, et aboutir à la gestion du processus de production (Mission de gestion ou de validation : Project et Activity), ou bien à la fabrication d'un résultat attendu (Mission de fabrication : Task). 
 Par exemple, une Mission de tournage peut être réalisée par un caméraman, ou bien une équipe de tournage et aboutit à la fabrication de matériel audiovisuel. 
 La production d'un film requière de nombreux contributeurs et la spécification de nouvelles Missions. 
 Ainsi, on distingue les Missions (dites de gestion) qui consistent à en définir d'autres, à suivre leur déroulement et à valider le résultat fabriqué par les Missions de fabrication.</rdfs:isDefinedBy>
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >Mission is a consistent set of actions which is carried out intentionally during a content’s production. These actions may be performed by one or several contributors and affect the content or the production process. For instance, a shooting Mission may be carried out by one cameraman or a complete shooting team. However, a movie production Mission needs much more contributors and its completion requires other Missions to be performed. In some case, management Mission may only define what is to do and then validate the work done. The effect of a Mission on content usually results in the modification or creation of instances. As an example, the creation of an instance of DigitalResource after a transcoding Mission.</rdfs:isDefinedBy>
     <rdfs:subClassOf rdf:resource="#HistoricalEvent"/>
   </owl:Class>
   <owl:Class rdf:about="#Sound">
@@ -3012,6 +3074,13 @@ Nous ajoutons également une contrainte de cohérence : dans le cas où il s'agi
       </owl:Class>
     </rdfs:domain>
   </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="isSpecializedBy">
+    <rdfs:domain rdf:resource="#ConceptualModel"/>
+    <rdfs:range rdf:resource="#ConceptualModel"/>
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:ID="specializes"/>
+    </owl:inverseOf>
+  </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="gathers">
     <rdfs:range rdf:resource="#MediaMapObject"/>
   </owl:ObjectProperty>
@@ -3044,6 +3113,8 @@ Par exemple, une Task de tournage vise à produire une séquence audiovisuelle a
         </owl:unionOf>
       </owl:Class>
     </rdfs:domain>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Le détail des droits (Right) qui sont accordés (grantsRights).</rdfs:isDefinedBy>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="hasCharacterisation">
     <rdfs:domain rdf:resource="#Sound"/>
@@ -3052,27 +3123,6 @@ Par exemple, une Task de tournage vise à produire une séquence audiovisuelle a
   <owl:ObjectProperty rdf:ID="createdFrom">
     <rdfs:range rdf:resource="#ConceptualModel"/>
     <rdfs:domain rdf:resource="#Population"/>
-  </owl:ObjectProperty>
-  <owl:ObjectProperty rdf:ID="hasTemporalRealisation">
-    <rdfs:range rdf:resource="#TemporalObject"/>
-    <rdfs:subPropertyOf>
-      <owl:ObjectProperty rdf:ID="hasRealisation"/>
-    </rdfs:subPropertyOf>
-    <owl:inverseOf>
-      <owl:ObjectProperty rdf:ID="isATemporalRealisationOf"/>
-    </owl:inverseOf>
-    <rdfs:domain>
-      <owl:Class>
-        <owl:unionOf rdf:parseType="Collection">
-          <owl:Class rdf:about="#FilmedElement"/>
-          <owl:Class rdf:about="#Program"/>
-          <owl:Class rdf:about="#Shot"/>
-          <owl:Class rdf:about="#Subject"/>
-          <owl:Class rdf:about="#Subshot"/>
-          <owl:Class rdf:about="#Scene"/>
-        </owl:unionOf>
-      </owl:Class>
-    </rdfs:domain>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="hasCameraSetProperties">
     <rdfs:range rdf:resource="#CameraSetProperties"/>
@@ -3085,6 +3135,14 @@ Par exemple, une Task de tournage vise à produire une séquence audiovisuelle a
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >La participation d'une personne ou d'une organisation (Agent) à l'évènement (par la relation hasParticipant/isAParticipantOf).Cette relation présente une version simplifiée de notre modélisation de l'implication d'un contributeur dans un projet de production.
 Nous ajoutons également une contrainte de cohérence : dans le cas où il s'agit d'évènement réel, seul des participants réels peuvent être associées à l'évènement.</rdfs:isDefinedBy>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="inverse_of_hasRealisation_2">
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:ID="hasFinalRealisation"/>
+    </owl:inverseOf>
+    <rdfs:subPropertyOf>
+      <owl:ObjectProperty rdf:ID="isARealisationOf"/>
+    </rdfs:subPropertyOf>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="encapsulates">
     <rdfs:domain rdf:resource="#Profile"/>
@@ -3123,11 +3181,10 @@ Nous ajoutons également une contrainte de cohérence : dans le cas où il s'agi
       <owl:ObjectProperty rdf:ID="hasInstance"/>
     </owl:inverseOf>
   </owl:ObjectProperty>
-  <owl:ObjectProperty rdf:about="#isATemporalRealisationOf">
+  <owl:ObjectProperty rdf:ID="isATemporalRealisationOf">
     <rdfs:domain rdf:resource="#TemporalObject"/>
-    <owl:inverseOf rdf:resource="#hasTemporalRealisation"/>
     <rdfs:subPropertyOf>
-      <owl:ObjectProperty rdf:ID="isARealisationOf"/>
+      <owl:ObjectProperty rdf:about="#isARealisationOf"/>
     </rdfs:subPropertyOf>
     <rdfs:range>
       <owl:Class>
@@ -3166,13 +3223,6 @@ Nous ajoutons également une contrainte de cohérence : dans le cas où il s'agi
     </owl:inverseOf>
     <rdfs:range rdf:resource="#AudioTrack"/>
   </owl:ObjectProperty>
-  <owl:ObjectProperty rdf:ID="isManagedBy">
-    <rdfs:range rdf:resource="#Agent"/>
-    <rdfs:domain rdf:resource="#Position"/>
-    <owl:inverseOf>
-      <owl:ObjectProperty rdf:ID="manages"/>
-    </owl:inverseOf>
-  </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="#worksFor">
     <rdfs:domain>
       <owl:Class>
@@ -3183,15 +3233,15 @@ Nous ajoutons également une contrainte de cohérence : dans le cas où il s'agi
       </owl:Class>
     </rdfs:domain>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >L'organisation (CorporateContributor) qui embauche un contributeur à ce poste peut être spécifiée (worksFor/hasWorker).</rdfs:isDefinedBy>
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >An individual may be employed by an organization (workFor relation).</rdfs:isDefinedBy>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >L'organisation (CorporateContributor) qui embauche un contributeur à ce poste peut être spécifiée (worksFor/hasWorker).</rdfs:isDefinedBy>
     <owl:inverseOf rdf:resource="#hasWorker"/>
     <rdfs:range rdf:resource="#CorporateContributor"/>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="precedes">
     <rdfs:subPropertyOf>
-      <owl:TransitiveProperty rdf:ID="precedesTransitive"/>
+      <owl:ObjectProperty rdf:ID="precedesTransitive"/>
     </rdfs:subPropertyOf>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Il est possible d'indiquer un ordre de réalisation des Missions grâce à des relations d'anteriorités (precedes, precedesTransitive) et de postériorités (follows, followsTransitive)</rdfs:isDefinedBy>
@@ -3208,10 +3258,24 @@ Nous ajoutons également une contrainte de cohérence : dans le cas où il s'agi
       <owl:ObjectProperty rdf:ID="isAManifestationOf"/>
     </owl:inverseOf>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >hasManifestation defines the relation between a MediaMapObject and a digital Resource. The Resource is a material expression of the object and is usually its ontological definition (MediaMapFootPrint). It may also be a media Resource which represents the only available expression of the object, a MediaWrapper. If there are more than one version, the relation will be made through the hasCopy relation. 
-For instance, a Programme will be attached to both a MediaMapFootPrint and the final media result (MediaWrapper) which is the Programme in itself.</rdfs:isDefinedBy>
+    >Une DigitalResource peut également être la représentation (manifestation) numérique des autres types d'entités par la relation isAManifestationOf/hasManifestation.	
+Par exemple, un Program a pour manifestation un AudiovisualMedia, une Segmentation a pour manifestation un fichier EDL, un Segment sera représenté par une portion de fichier EDL etc. D'autres Entity peuvent avoir des manifestations, par exemple lorsqu'elles sont représentés en-dehors de notre modélisation.</rdfs:isDefinedBy>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A DigitalResource is a digital representation (manifestation) of another kind of MediaMapObject (isAManifestationOf/hasManifestation relations).
+For instance, a Program will have a AudiovisualMedia as manifestation, a Segmentation will have a EDL file as manifestation, a Segment will be represented as a portion of EDL file etc.
+Other Entities, may get a manifestation if they are modeled separately from the main ontology file, or if other files may be used to represent them.</rdfs:isDefinedBy>
     <rdfs:range rdf:resource="#DigitalResource"/>
-    <rdfs:domain rdf:resource="#MediaMapObject"/>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#PhysicalResource"/>
+          <owl:Class rdf:about="#Entity"/>
+          <owl:Class rdf:about="#Term"/>
+          <owl:Class rdf:about="#Note"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="#composedOf">
     <rdfs:domain rdf:resource="#Opus"/>
@@ -3219,6 +3283,20 @@ For instance, a Programme will be attached to both a MediaMapFootPrint and the f
       <owl:ObjectProperty rdf:ID="isAComponentOf"/>
     </owl:inverseOf>
     <rdfs:range rdf:resource="#Opus"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#hasFinalRealisation">
+    <owl:inverseOf rdf:resource="#inverse_of_hasRealisation_2"/>
+    <rdfs:subPropertyOf>
+      <owl:ObjectProperty rdf:about="#hasRealisation"/>
+    </rdfs:subPropertyOf>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="hasNarrowerTermTransitive">
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:ID="hasBroaderTermTransitive"/>
+    </owl:inverseOf>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <rdfs:domain rdf:resource="#Term"/>
+    <rdfs:range rdf:resource="#Term"/>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="isHeldBy">
     <owl:inverseOf>
@@ -3243,7 +3321,7 @@ For instance, a Programme will be attached to both a MediaMapFootPrint and the f
       </owl:Class>
     </rdfs:range>
     <rdfs:subPropertyOf>
-      <owl:TransitiveProperty rdf:ID="hasMemberTransitive"/>
+      <owl:ObjectProperty rdf:ID="hasMemberTransitive"/>
     </rdfs:subPropertyOf>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >A notation has for member a term (hasMember relation) when the term conforms to the notation's characteristics. The membership is not exclusive so we may refine the description of a term at will. This relation is specialized by the natural language's membership (inLanguage relation). For instance, the value "Tchaikovsky" may be described both as member of the English naturalLanguage and encoded in ISO 8859-1.</rdfs:isDefinedBy>
@@ -3280,20 +3358,41 @@ For instance, a Programme will be attached to both a MediaMapFootPrint and the f
     </owl:inverseOf>
     <rdfs:domain rdf:resource="#ContentObject"/>
   </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="similarToTransitive">
+    <rdfs:range rdf:resource="#Term"/>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A transitive version of the "similarTo" relation created for inference purpose.</rdfs:isDefinedBy>
+    <rdfs:domain rdf:resource="#Term"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <owl:inverseOf rdf:resource="#similarToTransitive"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#hasBroaderTermTransitive">
+    <owl:inverseOf rdf:resource="#hasNarrowerTermTransitive"/>
+    <rdfs:domain rdf:resource="#Term"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <rdfs:range rdf:resource="#Term"/>
+  </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="hasProficiency">
     <owl:inverseOf>
       <owl:ObjectProperty rdf:ID="isMasteredBy"/>
     </owl:inverseOf>
     <rdfs:range rdf:resource="#Skill"/>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >A agent is defined as skilled (isProficient relation) when the management considers him so.</rdfs:isDefinedBy>
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Une ou plusieurs compétences (Skill) peuvent être attribué à un individu réel (hasProficiency/isMasteredBy).</rdfs:isDefinedBy>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A agent is defined as skilled (isProficient relation) when the management considers him so.</rdfs:isDefinedBy>
     <rdfs:domain rdf:resource="#HistoricalIndividual"/>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="describes">
     <rdfs:domain rdf:resource="#Annotation"/>
     <rdfs:range rdf:resource="#ContentObject"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="inverse_of_hasRealisation_1">
+    <rdfs:subPropertyOf rdf:resource="#isARealisationOf"/>
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:ID="hasCandidateRealisation"/>
+    </owl:inverseOf>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="shotValue">
     <rdfs:range>
@@ -3311,21 +3410,34 @@ For instance, a Programme will be attached to both a MediaMapFootPrint and the f
   <owl:ObjectProperty rdf:about="#isAManifestationOf">
     <owl:inverseOf rdf:resource="#hasManifestation"/>
     <rdfs:domain rdf:resource="#DigitalResource"/>
-    <rdfs:range rdf:resource="#Entity"/>
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >This defines the material expression of an entity through a document. Without documents, the entity has no perceptive existence and remains a pure concept. For instance, an Image document representing a man "isAManifestationOf" a PhysicalPerson’s.</rdfs:isDefinedBy>
-  </owl:ObjectProperty>
-  <owl:ObjectProperty rdf:ID="names">
-    <owl:inverseOf>
-      <owl:ObjectProperty rdf:ID="isNamedBy"/>
-    </owl:inverseOf>
-    <rdfs:range rdf:resource="#Entity"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-    <rdfs:domain rdf:resource="#Term"/>
+    <rdfs:range>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Entity"/>
+          <owl:Class rdf:about="#PhysicalResource"/>
+          <owl:Class rdf:about="#Term"/>
+          <owl:Class rdf:about="#Note"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:range>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Une DigitalResource peut également être la représentation (manifestation) numérique des autres types d'entités par la relation isAManifestationOf/hasManifestation.	
+Par exemple, un Program a pour manifestation un AudiovisualMedia, une Segmentation a pour manifestation un fichier EDL, un Segment sera représenté par une portion de fichier EDL etc. D'autres Entity peuvent avoir des manifestations, par exemple lorsqu'elles sont représentés en-dehors de notre modélisation.</rdfs:isDefinedBy>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A DigitalResource is a digital representation (manifestation) of another kind of MediaMapObject (isAManifestationOf/hasManifestation relations).
+For instance, a Program will have a AudiovisualMedia as manifestation, a Segmentation will have a EDL file as manifestation, a Segment will be represented as a portion of EDL file etc.
+Other Entities, may get a manifestation if they are modeled separately from the main ontology file, or if other files may be used to represent them.</rdfs:isDefinedBy>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="releaseMedium">
     <rdfs:domain rdf:resource="#Release"/>
     <rdfs:range rdf:resource="#Medium"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="AhasRelation">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >The goal of this annotation is to link ConceptualModel to owl:Property that convey MediaMap relation definition. TODO: See how to describe that.</rdfs:comment>
+    <rdfs:domain rdf:resource="#ConceptualModel"/>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="#isMasteredBy">
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
@@ -3373,7 +3485,18 @@ For instance, a Programme will be attached to both a MediaMapFootPrint and the f
       <owl:ObjectProperty rdf:about="#isMemberOf"/>
     </rdfs:subPropertyOf>
     <rdfs:range rdf:resource="#NaturalLanguage"/>
-    <rdfs:domain rdf:resource="#Term"/>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Term"/>
+          <owl:Class rdf:about="#Note"/>
+          <owl:Class rdf:about="#DigitalResource"/>
+          <owl:Class rdf:about="#Notation"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Un Term/Note/Notation/DigitalResource peut être décrite par la langue utilisée dans son contenu (inLanguage).</rdfs:isDefinedBy>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="hasForScopeOfUse">
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
@@ -3426,15 +3549,8 @@ For instance, a Programme will be attached to both a MediaMapFootPrint and the f
     >mm:CameraMovement</mm:hasNotationRange->
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="hasIdentifier">
-    <rdfs:domain>
-      <owl:Class>
-        <owl:unionOf rdf:parseType="Collection">
-          <owl:Class rdf:about="#ContentObject"/>
-          <owl:Class rdf:about="#DigitalResource"/>
-          <owl:Class rdf:about="#Opus"/>
-        </owl:unionOf>
-      </owl:Class>
-    </rdfs:domain>
+    <rdfs:domain rdf:resource="#MediaMapObject"/>
+    <rdfs:range rdf:resource="#Identifier"/>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="#assembles">
     <rdfs:domain rdf:resource="#Segmentation"/>
@@ -3454,11 +3570,23 @@ For instance, a Programme will be attached to both a MediaMapFootPrint and the f
     </rdfs:range>
     <rdfs:domain rdf:resource="#View"/>
   </owl:ObjectProperty>
-  <owl:ObjectProperty rdf:about="#isNamedBy">
-    <rdfs:domain rdf:resource="#Entity"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
-    <rdfs:range rdf:resource="#Term"/>
-    <owl:inverseOf rdf:resource="#names"/>
+  <owl:ObjectProperty rdf:about="#hasMemberTransitive">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A transitive version of the "hasMember" relation created for inference purpose.</rdfs:isDefinedBy>
+    <rdfs:domain rdf:resource="#Notation"/>
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:ID="isMemberOfTransitive"/>
+    </owl:inverseOf>
+    <rdfs:range>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#DigitalResource"/>
+          <owl:Class rdf:about="#Notation"/>
+          <owl:Class rdf:about="#Term"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:range>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="ShotProportionCharacterisation">
     <rdfs:range rdf:resource="#ShotProportions"/>
@@ -3505,7 +3633,7 @@ Par exemple, une Task de tournage vise à produire une séquence audiovisuelle a
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="hasPart">
     <rdfs:subPropertyOf>
-      <owl:TransitiveProperty rdf:about="#hasPartTransitive"/>
+      <owl:ObjectProperty rdf:about="#hasPartTransitive"/>
     </rdfs:subPropertyOf>
     <owl:inverseOf>
       <owl:ObjectProperty rdf:ID="isPartOf"/>
@@ -3513,10 +3641,6 @@ Par exemple, une Task de tournage vise à produire une séquence audiovisuelle a
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Une entity se compose (hasPart relation) d’une ou plusieurs entity lorsqu’il y a une appartenance hiérarchique directe entre ces entités. 
 Par exemple, un compositeOpus scène est composé de singleOpus shot. De même, une activity est composé d’autres activity ou bien de task.</rdfs:isDefinedBy>
-  </owl:ObjectProperty>
-  <owl:ObjectProperty rdf:ID="isStoredOn">
-    <rdfs:range rdf:resource="#Device"/>
-    <rdfs:domain rdf:resource="#Medium"/>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="hasContributor">
     <rdfs:domain rdf:resource="#MissionSettlement"/>
@@ -3539,16 +3663,47 @@ Par exemple, un compositeOpus scène est composé de singleOpus shot. De même, 
     <rdfs:domain rdf:resource="#Framing"/>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="isIllustratedBy">
-    <rdfs:domain rdf:resource="#Entity"/>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Une représentation (graphique, textuelle, sonore etc.) d'une Entity (hasIllustration/isIllustratedBy).</rdfs:isDefinedBy>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A digital graphical, textual or sound representation of an Entity (hasIllustration/isIllustratedBy).</rdfs:isDefinedBy>
     <owl:inverseOf>
-      <owl:ObjectProperty rdf:ID="illustrates"/>
+      <owl:InverseFunctionalProperty rdf:ID="hasIllustration"/>
     </owl:inverseOf>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
-    <rdfs:range rdf:resource="#DigitalResource"/>
+    <rdfs:subPropertyOf rdf:resource="#isAManifestationOf"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#hasPartTransitive">
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:about="#isPartOfTransitive"/>
+    </owl:inverseOf>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A transitive version of the "hasPart" relation created for inference purpose.</rdfs:isDefinedBy>
+    <rdfs:range rdf:resource="#Entity"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <rdfs:domain rdf:resource="#Entity"/>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="isRecordedOn">
     <rdfs:domain rdf:resource="#DigitalResource"/>
     <rdfs:range rdf:resource="#Medium"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#isMemberOfTransitive">
+    <rdfs:range rdf:resource="#Notation"/>
+    <owl:inverseOf rdf:resource="#hasMemberTransitive"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A transitive version of "isMemberOf" relation created for inference purpose.</rdfs:isDefinedBy>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Une version transitive de la relation MemberOf, créée pour des raisons d'inférences.</rdfs:isDefinedBy>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#DigitalResource"/>
+          <owl:Class rdf:about="#Notation"/>
+          <owl:Class rdf:about="#Term"/>
+          <owl:Class rdf:about="#Note"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="#hasInstance">
     <owl:inverseOf rdf:resource="#isAnInstanceOf"/>
@@ -3593,16 +3748,24 @@ Par exemple, le Project Magazine#48 utilise des séquences audiovisuelles (Segme
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="conformsTo">
     <rdfs:range rdf:resource="#SyntaxEncodingScheme"/>
+    <rdfs:subPropertyOf>
+      <owl:ObjectProperty rdf:about="#isMemberOf"/>
+    </rdfs:subPropertyOf>
     <rdfs:domain>
       <owl:Class>
         <owl:unionOf rdf:parseType="Collection">
           <owl:Class rdf:about="#DigitalResource"/>
           <owl:Class rdf:about="#Notation"/>
+          <owl:Class rdf:about="#Term"/>
+          <owl:Class rdf:about="#Note"/>
         </owl:unionOf>
       </owl:Class>
     </rdfs:domain>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >A notation is in conformity with (conformsTo) a SyntaxEncodingScheme when it uses it's encoding rules. A notation may of course conform to several schemes.</rdfs:isDefinedBy>
+    >A Notation, Term, Note or DigitalResource is in conformity with (conformsTo) a SyntaxEncodingScheme when it uses it's encoding rules. Several schemes may be used to detail the various rules used.</rdfs:isDefinedBy>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Une Notation, une Note, un Term ou une DigitalResource sont dites conformes à un SyntaxEncodingScheme, lorsque ces dernières utilisent ses règles d'écritures. 
+Il peut s'agir par exemple d'indiquer l'encodage des caractères ou le format de fichier.</rdfs:isDefinedBy>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="#isEngagedIn">
     <rdfs:range rdf:resource="#MissionSettlement"/>
@@ -3629,8 +3792,9 @@ Par exemple, le Project Magazine#48 utilise des séquences audiovisuelles (Segme
       <owl:ObjectProperty rdf:ID="confersPosition"/>
     </owl:inverseOf>
   </owl:ObjectProperty>
-  <owl:ObjectProperty rdf:ID="specializes">
+  <owl:ObjectProperty rdf:about="#specializes">
     <rdfs:domain rdf:resource="#ConceptualModel"/>
+    <owl:inverseOf rdf:resource="#isSpecializedBy"/>
     <rdfs:range rdf:resource="#ConceptualModel"/>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="axis">
@@ -3683,33 +3847,23 @@ Par exemple, le Project Magazine#48 utilise des séquences audiovisuelles (Segme
     <rdfs:range rdf:resource="#Notation"/>
     <owl:inverseOf rdf:resource="#hasForScopeOfUse"/>
   </owl:ObjectProperty>
-  <owl:ObjectProperty rdf:about="#manages">
-    <rdfs:range rdf:resource="#Position"/>
-    <owl:inverseOf rdf:resource="#isManagedBy"/>
-  </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="#follows">
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Il est possible d'indiquer un ordre de réalisation des Missions grâce à des relations d'anteriorités (precedes, precedesTransitive) et de postériorités (follows, followsTransitive)</rdfs:isDefinedBy>
     <owl:inverseOf rdf:resource="#precedes"/>
     <rdfs:subPropertyOf>
-      <owl:TransitiveProperty rdf:ID="followsTransitive"/>
+      <owl:ObjectProperty rdf:ID="followsTransitive"/>
     </rdfs:subPropertyOf>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="upon">
     <rdfs:range rdf:resource="#Mission"/>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >La ou les tâches (Mission) pour lesquels ils sont accordés (upon).</rdfs:isDefinedBy>
     <rdfs:domain rdf:resource="#CommissionOrder"/>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="requireProfile">
     <rdfs:range rdf:resource="#Profile"/>
     <rdfs:domain rdf:resource="#Profile"/>
-  </owl:ObjectProperty>
-  <owl:ObjectProperty rdf:ID="isDocumentedBy">
-    <owl:inverseOf>
-      <owl:ObjectProperty rdf:ID="documents"/>
-    </owl:inverseOf>
-    <rdfs:domain rdf:resource="#Entity"/>
-    <rdfs:range rdf:resource="#Note"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="#confersPosition">
     <rdfs:range rdf:resource="#Position"/>
@@ -3733,13 +3887,6 @@ For instance, a Programme have two copies one has DVD quality, the other one Web
     <owl:inverseOf>
       <owl:ObjectProperty rdf:ID="isACopyOf"/>
     </owl:inverseOf>
-  </owl:ObjectProperty>
-  <owl:ObjectProperty rdf:ID="hasTextualRealisation">
-    <rdfs:range rdf:resource="#TextualObject"/>
-    <rdfs:domain rdf:resource="#Book"/>
-    <rdfs:subPropertyOf>
-      <owl:ObjectProperty rdf:about="#hasRealisation"/>
-    </rdfs:subPropertyOf>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="#appearsOn">
     <rdfs:domain>
@@ -3787,9 +3934,7 @@ For instance, a Programme have two copies one has DVD quality, the other one Web
     <owl:inverseOf>
       <owl:ObjectProperty rdf:ID="hasBroaderTerm"/>
     </owl:inverseOf>
-    <rdfs:subPropertyOf>
-      <owl:TransitiveProperty rdf:ID="hasNarrowerTermTransitive"/>
-    </rdfs:subPropertyOf>
+    <rdfs:subPropertyOf rdf:resource="#hasNarrowerTermTransitive"/>
     <rdfs:range rdf:resource="#Term"/>
     <rdfs:domain rdf:resource="#Term"/>
   </owl:ObjectProperty>
@@ -3822,6 +3967,12 @@ For instance, a Programme have two copies one has DVD quality, the other one Web
     <rdfs:domain rdf:resource="#Framing"/>
     <rdfs:range rdf:resource="#ShootingSet"/>
   </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#isPartOfTransitive">
+    <rdfs:range rdf:resource="#Entity"/>
+    <owl:inverseOf rdf:resource="#hasPartTransitive"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <rdfs:domain rdf:resource="#Entity"/>
+  </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="releasedAsset">
     <rdfs:range rdf:resource="#MediaAsset"/>
     <rdfs:domain rdf:resource="#Release"/>
@@ -3830,10 +3981,10 @@ For instance, a Programme have two copies one has DVD quality, the other one Web
   <owl:ObjectProperty rdf:about="#isMemberOf">
     <owl:inverseOf rdf:resource="#hasMember"/>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >A term is member of a notation (isMemberOf relation) when it shares the corresponding characteristics. The membership is not exclusive so we may refine the description of a term at will. This relation is specialized by the natural language's membership (inLanguage relation). For instance, the value "Tchaikovsky" may be described both as member of the English naturalLanguage and encoded in ISO 8859-1.</rdfs:isDefinedBy>
-    <rdfs:subPropertyOf>
-      <owl:TransitiveProperty rdf:ID="isMemberOfTransitive"/>
-    </rdfs:subPropertyOf>
+    >Un Term/Notation/DigitalResource/Note fait partie d'une Notation (isMemberOf) lorsqu'il partage ses caractéristiques. Cette appartenance n'est pas exclusive afin de pouvoir caractériser les Terms de multiples manières.
+Cette relation est spécialisée par l'appartenance à un langage naturel (inLanguage), ou bien à une schéma syntaxique (conformsTo).
+Par exemple, le mot "management" peut être à la fois décrit comme appartenant à la langue Anglaise, et par son encodage UTF-8.</rdfs:isDefinedBy>
+    <rdfs:subPropertyOf rdf:resource="#isMemberOfTransitive"/>
     <rdfs:range rdf:resource="#Notation"/>
     <rdfs:domain>
       <owl:Class>
@@ -3841,6 +3992,7 @@ For instance, a Programme have two copies one has DVD quality, the other one Web
           <owl:Class rdf:about="#DigitalResource"/>
           <owl:Class rdf:about="#Notation"/>
           <owl:Class rdf:about="#Term"/>
+          <owl:Class rdf:about="#Note"/>
         </owl:unionOf>
       </owl:Class>
     </rdfs:domain>
@@ -3863,9 +4015,9 @@ For instance, a Programme have two copies one has DVD quality, the other one Web
   <owl:ObjectProperty rdf:ID="worksAs">
     <rdfs:domain rdf:resource="#Position"/>
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >Le titre officiel (Role) du poste peut être précisé (worksAs).</rdfs:isDefinedBy>
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >An individual may be employed by an organization (workFor relation) in a given position (workAs relation).</rdfs:isDefinedBy>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Le titre officiel (Role) du poste peut être précisé (worksAs).</rdfs:isDefinedBy>
     <rdfs:range rdf:resource="#Role"/>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="#hasTopic">
@@ -3887,22 +4039,21 @@ For instance, a Programme have two copies one has DVD quality, the other one Web
     <owl:inverseOf rdf:resource="#isAPrescriptionOf"/>
     <rdfs:range rdf:resource="#Annotation"/>
   </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:ID="similarTo">
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >This relation (similarTo) defines the meaning equivalence of two terms members of different notations. Each of them convey the same meaning but expressed in different ways, for different communities. For instance, "AmericanShot" is similarTo "A shot in which the character appears from head to knee". The first term addresses to a professional audience whereas the second one addresses to an amateur audience.</rdfs:isDefinedBy>
+    <rdfs:subPropertyOf rdf:resource="#similarToTransitive"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+    <owl:inverseOf rdf:resource="#similarTo"/>
+  </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="requiresIDGenerator">
     <rdfs:range rdf:resource="#IDGenerator"/>
     <rdfs:domain rdf:resource="#USE"/>
   </owl:ObjectProperty>
-  <owl:ObjectProperty rdf:about="#illustrates">
-    <rdfs:range rdf:resource="#Entity"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-    <owl:inverseOf rdf:resource="#isIllustratedBy"/>
-    <rdfs:domain rdf:resource="#DigitalResource"/>
-  </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="#hasBroaderTerm">
     <rdfs:domain rdf:resource="#Term"/>
     <rdfs:range rdf:resource="#Term"/>
-    <rdfs:subPropertyOf>
-      <owl:TransitiveProperty rdf:ID="hasBroaderTermTransitive"/>
-    </rdfs:subPropertyOf>
+    <rdfs:subPropertyOf rdf:resource="#hasBroaderTermTransitive"/>
     <owl:inverseOf rdf:resource="#hasNarrowerTerm"/>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="#isVideoTrackOf">
@@ -3942,6 +4093,16 @@ For instance, a Programme have two copies one has DVD quality, the other one Web
     <mm:hasNotationRange- rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >mm:ElementOrientation</mm:hasNotationRange->
     <rdfs:domain rdf:resource="#ElementPosition"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#precedesTransitive">
+    <owl:inverseOf>
+      <owl:ObjectProperty rdf:about="#followsTransitive"/>
+    </owl:inverseOf>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Il est possible d'indiquer un ordre de réalisation des Missions grâce à des relations d'anteriorités (precedes, precedesTransitive) et de postériorités (follows, followsTransitive)</rdfs:isDefinedBy>
+    <rdfs:domain rdf:resource="#Mission"/>
+    <rdfs:range rdf:resource="#Mission"/>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="#isAudioTrackOf">
     <rdfs:domain rdf:resource="#AudioTrack"/>
@@ -3985,17 +4146,37 @@ For instance, a Programme have two copies one has DVD quality, the other one Web
     <mm:hasNotationRange- rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >mm:WithinFramePosition</mm:hasNotationRange->
   </owl:ObjectProperty>
-  <owl:ObjectProperty rdf:about="#documents">
+  <owl:ObjectProperty rdf:ID="AhasConcept">
+    <rdfs:domain rdf:resource="#ConceptualModel"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#followsTransitive">
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Il est possible d'indiquer un ordre de réalisation des Missions grâce à des relations d'anteriorités (precedes, precedesTransitive) et de postériorités (follows, followsTransitive)</rdfs:isDefinedBy>
+    <rdfs:domain rdf:resource="#Mission"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+    <rdfs:range rdf:resource="#Mission"/>
+    <owl:inverseOf rdf:resource="#precedesTransitive"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#isLocatedIn">
+    <rdfs:range rdf:resource="#Location"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-    <owl:inverseOf rdf:resource="#isDocumentedBy"/>
-    <rdfs:domain rdf:resource="#Note"/>
-    <rdfs:range rdf:resource="#Entity"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
+    <rdfs:domain>
+      <owl:Class>
+        <owl:unionOf rdf:parseType="Collection">
+          <owl:Class rdf:about="#Event"/>
+          <owl:Class rdf:about="#PhysicalResource"/>
+        </owl:unionOf>
+      </owl:Class>
+    </rdfs:domain>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Il est possible de localiser (Location) l'évènement (par la relation isLocatedIn).
+Cette relation en fonctionne que dans un seul sens et ne peut pointer que vers un lieu, qui lui-même est liée à d'autres lieux par des relations méréologiques ou d'autres relations géographiques.Nous ajoutons également une contrainte de cohérence : un évènement réel ne peut se situer dans un lieu fictif.</rdfs:isDefinedBy>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="#isPartOf">
     <owl:inverseOf rdf:resource="#hasPart"/>
-    <rdfs:subPropertyOf>
-      <owl:TransitiveProperty rdf:about="#isPartOfTransitive"/>
-    </rdfs:subPropertyOf>
+    <rdfs:subPropertyOf rdf:resource="#isPartOfTransitive"/>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="isReleasedBy">
     <rdfs:domain rdf:resource="#Release"/>
@@ -4005,6 +4186,10 @@ For instance, a Programme have two copies one has DVD quality, the other one Web
     <rdfs:range rdf:resource="#ElementPosition"/>
     <rdfs:domain rdf:resource="#FilmedElementAnnotation"/>
   </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="#hasCandidateRealisation">
+    <rdfs:subPropertyOf rdf:resource="#hasRealisation"/>
+    <owl:inverseOf rdf:resource="#inverse_of_hasRealisation_1"/>
+  </owl:ObjectProperty>
   <owl:ObjectProperty rdf:ID="hasFilmedElement">
     <rdfs:domain rdf:resource="#Composition"/>
     <rdfs:range rdf:resource="#FilmedElementAnnotation"/>
@@ -4013,18 +4198,13 @@ For instance, a Programme have two copies one has DVD quality, the other one Web
     <rdfs:domain rdf:resource="#CameraParameters"/>
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </owl:DatatypeProperty>
-  <owl:DatatypeProperty rdf:ID="fieldOfView">
-    <rdfs:domain rdf:resource="#FilmedSpace"/>
-    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-  </owl:DatatypeProperty>
   <owl:DatatypeProperty rdf:ID="angleOfView">
     <rdfs:domain rdf:resource="#FilmedSpace"/>
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </owl:DatatypeProperty>
-  <owl:DatatypeProperty rdf:ID="moving">
-    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-    <rdfs:domain rdf:resource="#ShotAnnotation"/>
+  <owl:DatatypeProperty rdf:ID="fieldOfView">
+    <rdfs:domain rdf:resource="#FilmedSpace"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </owl:DatatypeProperty>
   <owl:DatatypeProperty rdf:ID="ColorPrimaries">
     <rdfs:domain rdf:resource="#VideoTrack"/>
@@ -4103,13 +4283,13 @@ For instance, a Programme have two copies one has DVD quality, the other one Web
   <owl:DatatypeProperty rdf:ID="Start">
     <rdfs:domain rdf:resource="#Event"/>
   </owl:DatatypeProperty>
-  <owl:DatatypeProperty rdf:ID="international">
-    <rdfs:domain rdf:resource="#Sound"/>
-    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
-  </owl:DatatypeProperty>
   <owl:DatatypeProperty rdf:about="#LastModifiedDate">
     <rdfs:domain rdf:resource="#MediaMapObject"/>
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:ID="international">
+    <rdfs:domain rdf:resource="#Sound"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
   </owl:DatatypeProperty>
   <owl:DatatypeProperty rdf:ID="cameraPosition">
     <rdfs:domain rdf:resource="#CameraSetProperties"/>
@@ -4249,6 +4429,11 @@ For instance, a Programme have two copies one has DVD quality, the other one Web
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     <rdfs:domain rdf:resource="#Composition"/>
   </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:ID="eventDuration">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="#Event"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  </owl:DatatypeProperty>
   <owl:DatatypeProperty rdf:ID="CodecID">
     <rdfs:domain>
       <owl:Class>
@@ -4318,13 +4503,13 @@ For instance, a Programme have two copies one has DVD quality, the other one Web
     <rdfs:range>
       <owl:DataRange>
         <owl:oneOf rdf:parseType="Resource">
-          <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-          >amateur</rdf:first>
           <rdf:rest rdf:parseType="Resource">
             <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
             >professional</rdf:first>
             <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
           </rdf:rest>
+          <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+          >amateur</rdf:first>
         </owl:oneOf>
       </owl:DataRange>
     </rdfs:range>
@@ -4348,6 +4533,13 @@ For instance, a Programme have two copies one has DVD quality, the other one Web
   <owl:DatatypeProperty rdf:ID="Width">
     <rdfs:domain rdf:resource="#VideoTrack"/>
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:ID="TextualRepresentation">
+    <rdfs:domain rdf:resource="#MediaMapObject"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Technical annotation, used for customize textual representation of each object. For instance, {ShortClassName} - {Identifier}.</rdfs:comment>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
   </owl:DatatypeProperty>
   <owl:DatatypeProperty rdf:ID="IdentifierAuthority"/>
   <owl:DatatypeProperty rdf:ID="BitRateMode">
@@ -4385,124 +4577,64 @@ For instance, a Programme have two copies one has DVD quality, the other one Web
     <rdfs:domain rdf:resource="#MediaMapObject"/>
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
   </owl:DatatypeProperty>
-  <owl:TransitiveProperty rdf:about="#precedesTransitive">
+  <owl:FunctionalProperty rdf:ID="names">
     <owl:inverseOf>
-      <owl:TransitiveProperty rdf:about="#followsTransitive"/>
+      <owl:InverseFunctionalProperty rdf:ID="isNamedBy"/>
     </owl:inverseOf>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >Il est possible d'indiquer un ordre de réalisation des Missions grâce à des relations d'anteriorités (precedes, precedesTransitive) et de postériorités (follows, followsTransitive)</rdfs:isDefinedBy>
-    <rdfs:domain rdf:resource="#Mission"/>
-    <rdfs:range rdf:resource="#Mission"/>
-  </owl:TransitiveProperty>
-  <owl:TransitiveProperty rdf:about="#hasPartTransitive">
-    <owl:inverseOf>
-      <owl:TransitiveProperty rdf:about="#isPartOfTransitive"/>
-    </owl:inverseOf>
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >A transitive version of the "hasPart" relation created for inference purpose.</rdfs:isDefinedBy>
     <rdfs:range rdf:resource="#Entity"/>
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-    <rdfs:domain rdf:resource="#Entity"/>
-  </owl:TransitiveProperty>
-  <owl:TransitiveProperty rdf:about="#isMemberOfTransitive">
-    <rdfs:range rdf:resource="#Notation"/>
-    <owl:inverseOf>
-      <owl:TransitiveProperty rdf:about="#hasMemberTransitive"/>
-    </owl:inverseOf>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >A transitive version of "isMemberOf" relation created for inference purpose.</rdfs:isDefinedBy>
-    <rdfs:domain>
-      <owl:Class>
-        <owl:unionOf rdf:parseType="Collection">
-          <owl:Class rdf:about="#DigitalResource"/>
-          <owl:Class rdf:about="#Notation"/>
-          <owl:Class rdf:about="#Term"/>
-        </owl:unionOf>
-      </owl:Class>
-    </rdfs:domain>
-  </owl:TransitiveProperty>
-  <owl:TransitiveProperty rdf:ID="similarToTransitive">
-    <rdfs:range rdf:resource="#Term"/>
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >A transitive version of the "similarTo" relation created for inference purpose.</rdfs:isDefinedBy>
     <rdfs:domain rdf:resource="#Term"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-    <owl:inverseOf rdf:resource="#similarToTransitive"/>
-  </owl:TransitiveProperty>
-  <owl:TransitiveProperty rdf:about="#hasBroaderTermTransitive">
-    <owl:inverseOf>
-      <owl:TransitiveProperty rdf:about="#hasNarrowerTermTransitive"/>
-    </owl:inverseOf>
-    <rdfs:domain rdf:resource="#Term"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-    <rdfs:range rdf:resource="#Term"/>
-  </owl:TransitiveProperty>
-  <owl:TransitiveProperty rdf:about="#isPartOfTransitive">
-    <rdfs:range rdf:resource="#Entity"/>
-    <owl:inverseOf rdf:resource="#hasPartTransitive"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-    <rdfs:domain rdf:resource="#Entity"/>
-  </owl:TransitiveProperty>
-  <owl:TransitiveProperty rdf:about="#followsTransitive">
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >Il est possible d'indiquer un ordre de réalisation des Missions grâce à des relations d'anteriorités (precedes, precedesTransitive) et de postériorités (follows, followsTransitive)</rdfs:isDefinedBy>
-    <rdfs:domain rdf:resource="#Mission"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-    <rdfs:range rdf:resource="#Mission"/>
-    <owl:inverseOf rdf:resource="#precedesTransitive"/>
-  </owl:TransitiveProperty>
-  <owl:TransitiveProperty rdf:about="#hasMemberTransitive">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >A transitive version of the "hasMember" relation created for inference purpose.</rdfs:isDefinedBy>
-    <rdfs:domain rdf:resource="#Notation"/>
-    <owl:inverseOf rdf:resource="#isMemberOfTransitive"/>
-    <rdfs:range>
-      <owl:Class>
-        <owl:unionOf rdf:parseType="Collection">
-          <owl:Class rdf:about="#DigitalResource"/>
-          <owl:Class rdf:about="#Notation"/>
-          <owl:Class rdf:about="#Term"/>
-        </owl:unionOf>
-      </owl:Class>
-    </rdfs:range>
-  </owl:TransitiveProperty>
-  <owl:TransitiveProperty rdf:about="#hasNarrowerTermTransitive">
-    <owl:inverseOf rdf:resource="#hasBroaderTermTransitive"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-    <rdfs:domain rdf:resource="#Term"/>
-    <rdfs:range rdf:resource="#Term"/>
-  </owl:TransitiveProperty>
-  <owl:SymmetricProperty rdf:ID="similarTo">
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >This relation (similarTo) defines the meaning equivalence of two terms members of different notations. Each of them convey the same meaning but expressed in different ways, for different communities. For instance, "AmericanShot" is similarTo "A shot in which the character appears from head to knee". The first term addresses to a professional audience whereas the second one addresses to an amateur audience.</rdfs:isDefinedBy>
-    <rdfs:subPropertyOf rdf:resource="#similarToTransitive"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-    <owl:inverseOf rdf:resource="#similarTo"/>
-  </owl:SymmetricProperty>
-  <owl:FunctionalProperty rdf:ID="eventDuration">
-    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-    <rdfs:domain rdf:resource="#Event"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
   </owl:FunctionalProperty>
-  <owl:InverseFunctionalProperty rdf:about="#isLocatedIn">
-    <rdfs:range rdf:resource="#Location"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <owl:FunctionalProperty rdf:ID="moving">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:domain rdf:resource="#ShotAnnotation"/>
+  </owl:FunctionalProperty>
+  <owl:FunctionalProperty rdf:ID="documents">
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <owl:inverseOf>
+      <owl:InverseFunctionalProperty rdf:ID="isDocumentedBy"/>
+    </owl:inverseOf>
+    <rdfs:domain rdf:resource="#Note"/>
+    <rdfs:range rdf:resource="#Entity"/>
+  </owl:FunctionalProperty>
+  <owl:InverseFunctionalProperty rdf:ID="inverse_of_hasIllustration">
+    <rdfs:subPropertyOf rdf:resource="#isAManifestationOf"/>
+  </owl:InverseFunctionalProperty>
+  <owl:InverseFunctionalProperty rdf:about="#hasIllustration">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <owl:inverseOf rdf:resource="#isIllustratedBy"/>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >Une représentation (graphique, textuelle, sonore etc.) d'une Entity (hasIllustration/isIllustratedBy).</rdfs:isDefinedBy>
+    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >A digital graphical, textual or sound representation of an Entity (hasIllustration/isIllustratedBy).</rdfs:isDefinedBy>
+    <rdfs:subPropertyOf rdf:resource="#hasManifestation"/>
     <rdfs:domain>
       <owl:Class>
         <owl:unionOf rdf:parseType="Collection">
-          <owl:Class rdf:about="#Event"/>
+          <owl:Class rdf:about="#Entity"/>
           <owl:Class rdf:about="#PhysicalResource"/>
+          <owl:Class rdf:about="#Term"/>
+          <owl:Class rdf:about="#Note"/>
         </owl:unionOf>
       </owl:Class>
     </rdfs:domain>
-    <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >Il est possible de localiser (Location) l'évènement (par la relation isLocatedIn).
-Cette relation en fonctionne que dans un seul sens et ne peut pointer que vers un lieu, qui lui-même est liée à d'autres lieux par des relations méréologiques ou d'autres relations géographiques.Nous ajoutons également une contrainte de cohérence : un évènement réel ne peut se situer dans un lieu fictif.</rdfs:isDefinedBy>
+    <rdfs:range rdf:resource="#DigitalResource"/>
+  </owl:InverseFunctionalProperty>
+  <owl:InverseFunctionalProperty rdf:ID="sIllustratedBy">
+    <rdfs:subPropertyOf rdf:resource="#isAManifestationOf"/>
+  </owl:InverseFunctionalProperty>
+  <owl:InverseFunctionalProperty rdf:about="#isNamedBy">
+    <rdfs:domain rdf:resource="#Entity"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:range rdf:resource="#Term"/>
+    <owl:inverseOf rdf:resource="#names"/>
+  </owl:InverseFunctionalProperty>
+  <owl:InverseFunctionalProperty rdf:about="#isDocumentedBy">
+    <owl:inverseOf rdf:resource="#documents"/>
+    <rdfs:domain rdf:resource="#Entity"/>
+    <rdfs:range rdf:resource="#Note"/>
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
   </owl:InverseFunctionalProperty>
   <mm:CameraMovements rdf:about="http://www.mediamapproject.org/Populations/Core#HorizontalTrackingShot">
     <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
@@ -4592,9 +4724,9 @@ Cette relation en fonctionne que dans un seul sens et ne peut pointer que vers u
     <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >MainShot</mm:Label>
     <mm:value rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    ></mm:value>
-    <mm:value rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Shot entirely part of the story-telling. Shot entirely part of the story-telling. If we remove this shot from the complete story, it will be broken.f we remove this shot from the complete story, it will be broken.</mm:value>
+    <mm:value rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    ></mm:value>
   </mm:StorytellingTypes>
   <mm:SoundCharacterisations rdf:about="http://www.mediamapproject.org/Populations/Core#DubbingSound">
     <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
@@ -4614,13 +4746,6 @@ Cette relation en fonctionne que dans un seul sens et ne peut pointer que vers u
     <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >GetInFrame</mm:Label>
   </mm:ElementMovements>
-  <owl:AnnotationProperty rdf:ID="TextualRepresentation">
-    <rdfs:domain rdf:resource="#MediaMapObject"/>
-    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >Technical annotation, used for customize textual representation of each object. For instance, {ShortClassName} - {Identifier}.</rdfs:comment>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
-  </owl:AnnotationProperty>
   <mm:Cuts rdf:about="http://www.mediamapproject.org/Populations/Core#MatchCut">
     <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >MatchCut</mm:Label>
@@ -4629,18 +4754,18 @@ Cette relation en fonctionne que dans un seul sens et ne peut pointer que vers u
     <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >OWL</mm:Label>
     <mm:conformsTo>
+      <mm:SyntaxEncodingScheme rdf:about="http://www.mediamapproject.org/Populations/Core#XML-SES">
+        <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+        >XML</mm:Label>
+      </mm:SyntaxEncodingScheme>
+    </mm:conformsTo>
+    <mm:conformsTo>
       <mm:SyntaxEncodingScheme rdf:about="http://www.mediamapproject.org/Populations/Core#RDF-SES">
         <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
         >RDF</mm:Label>
-        <mm:conformsTo>
-          <mm:SyntaxEncodingScheme rdf:about="http://www.mediamapproject.org/Populations/Core#XML-SES">
-            <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-            >XML</mm:Label>
-          </mm:SyntaxEncodingScheme>
-        </mm:conformsTo>
+        <mm:conformsTo rdf:resource="http://www.mediamapproject.org/Populations/Core#XML-SES"/>
       </mm:SyntaxEncodingScheme>
     </mm:conformsTo>
-    <mm:conformsTo rdf:resource="http://www.mediamapproject.org/Populations/Core#XML-SES"/>
   </mm:SyntaxEncodingScheme>
   <mm:NaturalLanguage rdf:about="http://www.mediamapproject.org/Populations/Core#English-NL">
     <mm:CreationRepository rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
@@ -4648,14 +4773,14 @@ Cette relation en fonctionne que dans un seul sens et ne peut pointer que vers u
     <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >English</mm:Label>
   </mm:NaturalLanguage>
-  <mm:AspectRatioTypes rdf:about="http://www.mediamapproject.org/Populations/Core#_4_3">
-    <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >4/3</mm:Label>
-  </mm:AspectRatioTypes>
   <mm:CameraMovements rdf:about="http://www.mediamapproject.org/Populations/Core#Complex_">
     <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Complex</mm:Label>
   </mm:CameraMovements>
+  <mm:AspectRatioTypes rdf:about="http://www.mediamapproject.org/Populations/Core#_4_3">
+    <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >4/3</mm:Label>
+  </mm:AspectRatioTypes>
   <mm:SoundCharacterisations rdf:about="http://www.mediamapproject.org/Populations/Core#DirectSound">
     <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >DirectSound</mm:Label>
@@ -4758,10 +4883,6 @@ Cette relation en fonctionne que dans un seul sens et ne peut pointer que vers u
     <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >MediumCloseUp</mm:Label>
   </mm:ShotValues>
-  <owl:AnnotationProperty rdf:ID="AhasConcept">
-    <rdfs:domain rdf:resource="#ConceptualModel"/>
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-  </owl:AnnotationProperty>
   <mm:Role rdf:about="http://www.mediamapproject.org/Populations/Core#Employee">
     <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Employee</mm:Label>
@@ -4777,12 +4898,6 @@ Cette relation en fonctionne que dans un seul sens et ne peut pointer que vers u
   <owl:AnnotationProperty rdf:ID="Anames">
     <rdfs:isDefinedBy rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >A term may be attached to any ontological element to label it (isNamedBy / names relation), instance, concept or property.</rdfs:isDefinedBy>
-  </owl:AnnotationProperty>
-  <owl:AnnotationProperty rdf:ID="AhasRelation">
-    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-    <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >The goal of this annotation is to link ConceptualModel to owl:Property that convey MediaMap relation definition. TODO: See how to describe that.</rdfs:comment>
-    <rdfs:domain rdf:resource="#ConceptualModel"/>
   </owl:AnnotationProperty>
   <mm:Right rdf:about="http://www.mediamapproject.org/Populations/Core#AssignmentRight">
     <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
@@ -4814,14 +4929,14 @@ Cette relation en fonctionne que dans un seul sens et ne peut pointer que vers u
     <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >ExtremeCloseUp</mm:Label>
   </mm:ShotValues>
-  <mm:CameraMovements rdf:about="http://www.mediamapproject.org/Populations/Core#CircularTrackingShot">
-    <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
-    >CircularTrackingShot</mm:Label>
-  </mm:CameraMovements>
   <mm:ShotValues rdf:about="http://www.mediamapproject.org/Populations/Core#CloseUp">
     <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >CloseUp</mm:Label>
   </mm:ShotValues>
+  <mm:CameraMovements rdf:about="http://www.mediamapproject.org/Populations/Core#CircularTrackingShot">
+    <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
+    >CircularTrackingShot</mm:Label>
+  </mm:CameraMovements>
   <mm:WithinFramePositions rdf:about="http://www.mediamapproject.org/Populations/Core#Center">
     <mm:Label rdf:datatype="http://www.w3.org/2001/XMLSchema#string"
     >Centre</mm:Label>
